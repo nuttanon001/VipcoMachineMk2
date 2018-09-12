@@ -1,0 +1,54 @@
+<div *ngIf="InfoValue;else elseBlock">
+  <form [formGroup]="InfoValueForm">
+    <div class="form-container-column">
+      <mat-accordion class="headers-align">
+        <!--Expansion1-->
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Group standard-time infomation</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the name and type machine for type standard-time
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!--Row1-->
+          <mat-form-field hintLabel="Specify the group standard name">
+            <input matInput formControlName="Name"
+                   required maxlength="50"
+                   placeholder="Name for group standard">
+            <mat-hint [align]="end">{{InfoValueForm.controls.Name.value?.length || 0}}/50</mat-hint>
+            <mat-error *ngIf="InfoValueForm.controls.Name.hasError('required')">
+              Group standard name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the machine group">
+            <mat-select formControlName="TypeMachineId"
+                        required
+                        placeholder="Machine group for type standard time">
+              <mat-option>-</mat-option>
+              <mat-option *ngFor="let typeMachine of typeMachines" [value]="typeMachine.TypeMachineId">
+                {{ typeMachine.TypeMachineCode }}-{{typeMachine.Name}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="InfoValueForm.controls.TypeMachineId.hasError('required')">
+              Machine group is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="onSubmit()" [disabled]="!InfoValueForm.valid">Save</button>
+            <button mat-button color="warn" (click)="onCancel()">Cancel</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

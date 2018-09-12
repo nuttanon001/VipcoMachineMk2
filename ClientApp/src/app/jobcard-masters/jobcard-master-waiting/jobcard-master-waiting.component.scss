@@ -1,0 +1,76 @@
+@import "../../shared/styles/master.style.scss";
+@import "../../shared/styles/info.style.scss";
+
+@mixin block-master {
+  text-align: center;
+  color: darkslateblue !important;
+  font-size: medium !important;
+  border-color: black !important;
+}
+
+/* Structure */
+.master-container {
+  height: $master-vh;
+  width: $master-vw;
+  display: flex;
+  flex-flow: column;
+}
+
+.detail-click {
+  color: maroon;
+  cursor: pointer;
+}
+
+.master-container > div {
+  flex: 1 100%;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  text-align: center;
+
+  mat-form-field {
+    width: 200px;
+    min-height: 50px;
+    margin: 5px;
+  }
+}
+
+.PoHeader {
+  background-color: mediumseagreen !important;
+  @include block-master;
+}
+
+.PrHeader {
+  background-color: gold !important;
+  @include block-master;
+}
+
+.RcHeader {
+  background-color: lightblue !important;
+  @include block-master;
+}
+
+.detail {
+  max-height: 90%;
+  align-items: flex-start;
+  align-self: flex-start;
+}
+
+.DeadLine {
+  background-color: maroon !important;
+  color: white !important;
+}
+
+$col-height: 20px;
+
+.my-border {
+  border-bottom: solid 1px black !important;
+}

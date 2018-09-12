@@ -1,0 +1,125 @@
+<div *ngIf="InfoValue;else elseBlock">
+  <form [formGroup]="InfoValueForm">
+    <div class="form-container-column">
+      <mat-accordion class="headers-align">
+        <!--Expansion1-->
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Cutting-Plan infomation</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the code-number, description and type for machine
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!--Row1-->
+          <mat-form-field hintLabel="Specify the cutting-plan code">
+            <textarea matInput placeholder="Code number for cutting-plan" rows="4"
+                      required maxlength="250"
+                      formControlName="CuttingPlanNo">
+            </textarea>
+            <mat-hint [align]="end">{{InfoValueForm.controls.CuttingPlanNo.value?.length || 0}}/250</mat-hint>
+            <mat-error *ngIf="InfoValueForm.controls.CuttingPlanNo.hasError('required')">
+              Cutting plan code is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the description">
+            <textarea matInput placeholder="Description for cutting-plan" rows="4"
+                      maxlength="200"
+                      formControlName="Description">
+            </textarea>
+            <mat-hint [align]="end">{{InfoValueForm.controls.Description.value?.length || 0}}/200</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the type cutting plan">
+            <mat-select formControlName="TypeCuttingPlan"
+                        required
+                        placeholder="Select type cutting plan">
+              <mat-option>-</mat-option>
+              <mat-option [value]="1">CuttingPlan</mat-option>
+              <mat-option [value]="2">ShopDrawing</mat-option>
+              <mat-option [value]="3">Other</mat-option>
+            </mat-select>
+            <mat-error *ngIf="InfoValueForm.controls.TypeCuttingPlan.hasError('required')">
+              Type cutting-plan is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the project number">
+            <input matInput formControlName="ProjectCodeString"
+                   (click)="openDialog('Project')" readonly
+                   class="click-input" placeholder="Project number for cutting-plan">
+            <mat-error *ngIf="InfoValueForm.controls.ProjectCodeString.hasError('required')">
+              Project number cutting-plan is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="nextStep()">
+              <strong>Next</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+
+        <!--Expansion2-->
+        <mat-expansion-panel class="my-1" [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Material and quantity information</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the material and quantity for cutting-plan
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mat-form-field hintLabel="Specify the material size">
+            <input matInput formControlName="MaterialSize"
+                   maxlength="200"
+                   placeholder="Material size for cutting-plan">
+            <mat-hint [align]="end">{{InfoValueForm.controls.MaterialSize.value?.length || 0}}/200</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the material grade">
+            <input matInput formControlName="MaterialGrade"
+                   maxlength="200"
+                   placeholder="Material grade for machine">
+            <mat-hint [align]="end">{{InfoValueForm.controls.MaterialGrade.value?.length || 0}}/200</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the quantity">
+            <input matInput type="number" formControlName="Quantity"
+                   min="0"
+                   placeholder="Quantity for cutting-plan">
+            <mat-error *ngIf="InfoValueForm.controls.Quantity.hasError('min')">
+              Quantity for cutting-plan min is 0
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the weight">
+            <input matInput type="number" formControlName="Weight"
+                   min="0"
+                   placeholder="Weight for cutting-plan">
+            <mat-error *ngIf="InfoValueForm.controls.Weight.hasError('min')">
+              Weight for cutting-plan min is 0
+            </mat-error>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="warn" (click)="prevStep()">
+              <strong>Previous</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+
+      </mat-accordion>
+    </div>
+  </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

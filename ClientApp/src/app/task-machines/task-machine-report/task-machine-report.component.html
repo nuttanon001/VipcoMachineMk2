@@ -1,0 +1,59 @@
+<div>
+  <form [formGroup]="reportForm" class="header">
+    <div>
+      <i class="fa fa-product-hunt" aria-hidden="true"></i>
+      <mat-form-field>
+        <mat-select placeholder="Selected mode"
+                    formControlName="ChartMode">
+          <mat-option *ngFor="let chart of chartMode" [value]="chart.mode">
+            {{ chart.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <i class="fa fa-object-group" aria-hidden="true"></i>
+      <mat-form-field>
+        <mat-select placeholder="Selected group of machine"
+                    formControlName="TypeMachineId">
+          <mat-option *ngFor="let typeMachine of typeMachines" [value]="typeMachine.TypeMachineId">
+            {{ typeMachine.Name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <i class="fa fa-calendar-o" aria-hidden="true"></i>
+      <mat-form-field>
+        <input matInput [matDatepicker]="StartDate" placeholder="Choose a date"
+               formControlName="StartDate" [max]="reportForm.controls.EndDate.value">
+        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+        <mat-datepicker #StartDate></mat-datepicker>
+      </mat-form-field>
+      &nbsp;&ndash;&nbsp;
+      <mat-form-field>
+        <input matInput [matDatepicker]="EndDate" placeholder="Choose a date"
+               formControlName="EndDate" [min]="reportForm.controls.StartDate.value">
+        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+        <mat-datepicker #EndDate></mat-datepicker>
+      </mat-form-field>
+    </div>
+   
+    <div>
+      <button mat-mini-fab color="warn" (click)="resetFilter()"
+              matTooltipPosition="left" matTooltip="Reset all filter">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </form>
+  <div *ngIf="needReset" class="loading-shade">
+    <mat-spinner *ngIf="needReset"></mat-spinner>
+  </div>
+  <div class="detail" *ngIf="!needReset">
+    <app-task-machine-chart [newChartLabel]="chartLabel" [newChartData]="chartData"
+                            [xAxesLabel]="xLabel" [yAxesLabel]="yLabel"
+                            [uomChart]="uomChart"></app-task-machine-chart>
+  </div>
+</div>

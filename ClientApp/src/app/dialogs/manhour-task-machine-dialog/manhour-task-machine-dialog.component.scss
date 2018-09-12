@@ -1,0 +1,7 @@
+@import "../../shared/styles/master.style.scss";
+
+.master-dialog-vh {
+  width: $dialog-vw;
+  height: 50vh;
+  @include block-master;
+}

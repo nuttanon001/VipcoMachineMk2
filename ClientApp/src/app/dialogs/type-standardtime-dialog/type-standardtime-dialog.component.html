@@ -1,0 +1,34 @@
+<div class="master-dialog-vh">
+  <H5 style="color:cadetblue">Select group of standard-time</H5>
+  <div class="child-container">
+    <div class="center-content">
+      <div *ngIf="!InfoValue;else InfoBlock">
+        <div *ngIf="mode === 0;else ElseBlock">
+          <app-type-standardtime-table (returnSelected)="onSelectedValue($event)" (returnSelectedWith)="onEditInfo($event)"></app-type-standardtime-table>
+        </div>
+        <ng-template #ElseBlock>
+          <app-type-standardtime-table (returnSelectesd)="onSelectedValues($event)" [isMultiple]="true"></app-type-standardtime-table>
+        </ng-template>
+      </div>
+      <ng-template #InfoBlock>
+        <app-type-standardtime-info [InfoValue]="InfoValue" (SubmitOrCancel)="onComplateOrCancelEntity($event)">
+        </app-type-standardtime-info>
+      </ng-template>
+    </div>
+    <div class="right-content ml-1">
+      <button mat-mini-fab color="accent" (click)="onSelectedClick()" matTooltip="select"
+              [disabled]="(!getValue && !getValues) || InfoValue">
+        <mat-icon>offline_pin</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" (click)="onCancelClick()"
+              matTooltip="close dialog">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <hr />
+      <button mat-mini-fab color="primary" (click)="onNewEntity()"
+              matTooltip="add new data" [disabled]="InfoValue">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

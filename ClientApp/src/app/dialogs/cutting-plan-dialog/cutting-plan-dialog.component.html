@@ -1,0 +1,41 @@
+<div class="master-dialog-vh">
+  <H5 style="color:cadetblue">Select cutting-plan or new cutting-plan</H5>
+  <div *ngIf="onLoading" class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="child-container">
+    <div class="center-content">
+      <div *ngIf="!ShowDetail;else InfoBlock">
+        <div *ngIf="mode === 0;else ElseBlock">
+          <app-cutting-plan-table-dialog (returnSelected)="onSelectedValue($event)" (returnSelectedWith)="onDetailView($event)"></app-cutting-plan-table-dialog>
+        </div>
+        <ng-template #ElseBlock>
+          <app-cutting-plan-table-dialog (returnSelectesd)="onSelectedValues($event)" [isMultiple]="true"></app-cutting-plan-table-dialog>
+        </ng-template>
+      </div>
+      <ng-template #InfoBlock>
+        <app-cutting-plan-info-dialog></app-cutting-plan-info-dialog>
+      </ng-template>
+    </div>
+    <div class="right-content ml-1">
+      <button mat-mini-fab color="accent" (click)="onSelectedClick()" matTooltip="select"
+              [disabled]="(!getValue && !getValues)">
+        <mat-icon>offline_pin</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" (click)="onCancelClick()"
+              matTooltip="close dialog">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <hr />
+      <button mat-mini-fab color="primary" (click)="onDetailView()"
+              matTooltip="add new data" [disabled]="ShowDetail">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-mini-fab color="accent" (click)="onSubmit()"
+              matTooltip="Save"
+              [disabled]="!canSave">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

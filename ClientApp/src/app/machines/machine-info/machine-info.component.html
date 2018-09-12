@@ -1,0 +1,149 @@
+<div *ngIf="InfoValue;else elseBlock">
+  <form [formGroup]="InfoValueForm">
+    <div class="form-container-column">
+      <mat-accordion class="headers-align">
+        <!--Expansion1-->
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Machine infomation</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the code, name and install date for machine
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!--Row1-->
+          <mat-form-field hintLabel="Specify the machine code">
+            <input matInput formControlName="MachineCode"
+                   required maxlength="50"
+                   placeholder="Code for machine">
+            <mat-hint [align]="end">{{InfoValueForm.controls.MachineCode.value?.length || 0}}/50</mat-hint>
+            <mat-error *ngIf="InfoValueForm.controls.MachineCode.hasError('required')">
+              Machine code is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the machine name">
+            <input matInput type="text" formControlName="MachineName"
+                   required maxlength="200"
+                   placeholder="Name for machine">
+            <mat-hint [align]="end">{{InfoValueForm.controls.MachineName.value?.length || 0}}/200</mat-hint>
+            <mat-error *ngIf="InfoValueForm.controls.MachineName.hasError('required')">
+              Machine name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the machine group">
+            <mat-select formControlName="TypeMachineId"
+                        required
+                        placeholder="Selected machine group">
+              <mat-option>-</mat-option>
+              <mat-option *ngFor="let typeMachine of typeMachines" [value]="typeMachine.TypeMachineId">
+                {{ typeMachine.TypeMachineCode }}-{{typeMachine.Name}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="InfoValueForm.controls.TypeMachineId.hasError('required')">
+              Machine group is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput [matDatepicker]="InstalledDate" formControlName="InstalledDate"
+                   placeholder="Install date for machine">
+            <mat-datepicker-toggle matSuffix [for]="InstalledDate"></mat-datepicker-toggle>
+            <mat-datepicker #InstalledDate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="nextStep()">
+              <strong>Next</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+
+        <!--Expansion2-->
+        <mat-expansion-panel class="my-1" [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Other information</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the model, brand, image and remark for machine
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mat-form-field hintLabel="Specify the machine model">
+            <input matInput formControlName="Model"
+                   maxlength="50"
+                   placeholder="Model for machine">
+            <mat-hint [align]="end">{{InfoValueForm.controls.Model.value?.length || 0}}/50</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the machine brand">
+            <input matInput formControlName="Brand"
+                   maxlength="50"
+                   placeholder="Brand for machine">
+            <mat-hint [align]="end">{{InfoValueForm.controls.Brand.value?.length || 0}}/50</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the machine remark">
+            <input matInput formControlName="Remark"
+                   maxlength="200"
+                   placeholder="Remark for machine">
+            <mat-hint [align]="end">{{InfoValueForm.controls.Remark.value?.length || 0}}/200</mat-hint>
+          </mat-form-field>
+
+          <div class="is-flax">
+            <input type="file" accept="image/*" id="ImageFile" #ImageFile
+                   (change)="onFileUploadChange($event)">
+          </div>
+
+          <div class="is-flax" *ngIf="InfoValueForm.controls.MachineImageString.value">
+            <img [src]="InfoValueForm.controls.MachineImageString.value" class="size-img" />
+          </div>
+
+          <mat-action-row>
+            <button mat-button color="warn" (click)="prevStep()">
+              <strong>Previous</strong>
+            </button>
+            <button mat-button color="primary" (click)="nextStep()">
+              <strong>Next</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+
+        <!--Expansion3-->
+        <mat-expansion-panel class="my-1" [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Machine Operator</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify employee operators for machine
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div *ngIf="InfoValue.MachineHasOperators">
+            <app-machine-operator-table [dataRows]="InfoValue.MachineHasOperators" (returnSelected)="OnDetailSelect($event)">
+            </app-machine-operator-table>
+          </div>
+
+          <mat-action-row>
+            <button mat-button color="warn" (click)="prevStep()">
+              <strong>Previous</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+
+      </mat-accordion>
+    </div>
+  </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

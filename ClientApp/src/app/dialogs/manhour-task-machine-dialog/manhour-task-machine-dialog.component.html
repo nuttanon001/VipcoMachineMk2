@@ -1,0 +1,21 @@
+<div class="master-dialog-vh">
+  <H5 style="color:cadetblue">Change actual manhour for this task-machine.</H5>
+  <div class="child-container">
+    <div class="center-content" *ngIf="InfoValue.TaskMachineId !== -99">
+      <app-manhour-change [InfoValue]="InfoValue" [denyEdit]="InfoValue.ReadOnly" (SubmitOrCancel)="onComplateOrCancelEntity($event)">
+      </app-manhour-change>
+    </div>
+    <div class="right-content ml-1">
+      <button mat-mini-fab color="primary" (click)="onSelectedClick()"
+              [disabled]="!getValue"
+              matTooltip="add new data">
+        <mat-icon>save</mat-icon>
+      </button>
+      <hr />
+      <button mat-mini-fab color="warn" (click)="onCancelClick()"
+              matTooltip="close dialog">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

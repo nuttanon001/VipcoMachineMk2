@@ -1,0 +1,59 @@
+<div>
+  <form [formGroup]="reportForm" class="header">
+    <div>
+      <i class="fa fa-search" aria-hidden="true"></i>
+      <mat-form-field>
+        <input matInput placeholder="Filter By Text"
+               id="Filter" formControlName="Filter">
+      </mat-form-field>
+    </div>
+    <div>
+      <i class="fa fa-product-hunt" aria-hidden="true"></i>
+      <mat-form-field>
+        <input matInput placeholder="Filter By Job" class="click-input"
+               (click)="onShowDialog('Project')" readonly
+               formControlName="Where3">
+      </mat-form-field>
+    </div>
+    <div style="margin:0 0 10px 0;">
+      <button type="button" mat-mini-fab color="warn" (click)="resetFilter()"
+              matTooltip="Reset all filter" style="margin:4px;">
+        <i class="fa fa-2x fa-minus" aria-hidden="true" style="margin:0px;"></i>
+      </button>
+    </div>
+  </form>
+  <div *ngIf="needReset" class="loading-shade">
+    <mat-spinner *ngIf="needReset"></mat-spinner>
+  </div>
+  <div class="detail">
+    <table *ngIf="!needReset" id="table1">
+      <p-table [first]="first" [columns]="columns" [value]="datasource" [lazy]="true" (onLazyLoad)="loadDataLazy($event)"
+               [paginator]="true" [rows]="15" [rowsPerPageOptions]="[15,25,50]" [resizableColumns]="true"
+               [totalRecords]="totalRecords" [loading]="loading" [scrollable]="true" scrollHeight="65vh" [style]="{width:tableWidth}">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [ngStyle]="{'width.px':col.width}" class="PrHeader">
+              {{col.header}}
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr>
+            <td *ngFor="let col of columns" [ngStyle]="{'width.px':col.width}">
+              <span *ngIf="col.type !== 3;else elseBlock" [innerHtml]="rowData[col.field] || '-'"></span>
+              <ng-template #elseBlock>
+                <ol type="I">
+                  <li *ngFor="let master of rowData[col.field];index as i;" class="text-success">
+                    <i class="fa fa-search" (click)="onSelectRow(master)" style="cursor:pointer;">
+                      <span>{{master.CuttingPlanNo}}</span>
+                    </i>
+                  </li>
+                </ol>
+              </ng-template>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </table>
+  </div>
+</div>

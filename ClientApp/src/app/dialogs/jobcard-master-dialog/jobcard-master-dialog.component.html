@@ -1,0 +1,47 @@
+<div class="master-dialog-vh">
+  <H5 style="color:cadetblue">Require machine infomation</H5>
+  <div *ngIf="onLoading" class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="child-container">
+    <div class="center-content">
+      <div class="child-container" style="min-height:35px;" *ngIf="optionData.ShowCommand">
+        <div *ngIf="!isLmSm">
+          <button type="button" mat-raised-button color="primary" matTooltip="Go to process machine result"
+                  (click)="onSelectedClick(1)">
+            Process Machine
+          </button>
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <button type="button" mat-raised-button color="primary" matTooltip="Go to other work shop result"
+                  (click)="onSelectedClick(3)">
+            Other Work Shop(Option)
+          </button>
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <button type="button" mat-raised-button color="accent" matTooltip="Go to split cutting plan result"
+                  (click)="onSelectedClick(4)" [disabled]="optionData.infoValue.Quality < 2">
+            Split(Option)
+          </button>
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <button type="button" mat-raised-button color="accent" matTooltip="Go to change other machine group result"
+                  (click)="onSelectedClick(2)">
+            Other Machine Group(Option)
+          </button>
+        </div>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" mat-raised-button color="warn" matTooltip="Cancel cancel control"
+                (click)="onSelectedClick(-1)">
+          Cancel !!!
+        </button>
+        <span class="mx-2"></span>
+        <button type="button" mat-raised-button color="accent" (click)="onCancelClick()"
+                matTooltip="Go Back" class="ml-auto">
+          Close
+        </button>
+      </div>
+      <hr class="w-75 mt-1" />
+      <div>
+        <app-jobcard-master-view-extend [jobCardDetailId]="jobCardDetailId" (jobCardDetail)="onSelected($event)"></app-jobcard-master-view-extend>
+      </div>
+    </div>
+   </div>
+</div>

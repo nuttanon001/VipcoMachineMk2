@@ -1,0 +1,22 @@
+<div class="master-dialog-vh">
+  <H5 style="color:cadetblue">Specfiy information for require machine detail.</H5>
+  <div class="child-container">
+    <div class="center-content" *ngIf="InfoValue?.data?.JobCardDetailId !== -99">
+      <app-jobcard-detail-info [InfoValue]="InfoValue.data" [isSplitOption]="InfoValue.option"
+                               (SubmitOrCancel)="onComplateOrCancelEntity($event)">
+      </app-jobcard-detail-info>
+    </div>
+    <div class="right-content ml-1">
+      <button mat-mini-fab color="primary" (click)="onSelectedClick()"
+              [disabled]="!getValue"
+              matTooltip="add new data">
+        <mat-icon>add</mat-icon>
+      </button>
+      <hr />
+      <button mat-mini-fab color="warn" (click)="onCancelClick()"
+              matTooltip="close dialog">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

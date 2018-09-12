@@ -1,0 +1,15 @@
+@import "../../../shared/styles/table.style.scss";
+
+.mat-table {
+  overflow: auto;
+  height: calc(#{$dialog-vh} - 150px);
+  width: calc(#{$dialog-vw} - 45px);
+}
+
+.mat-column-MachineCode {
+  flex: 0 0 120px;
+}
+
+.mat-column-TypeMachineString {
+  flex: 0 0 130px;
+}

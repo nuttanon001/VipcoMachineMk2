@@ -1,0 +1,15 @@
+@import "../../shared/styles/table.style.scss";
+
+mat-form-field {
+  width: 30%;
+  min-height: 50px;
+  margin: 5px;
+}
+.mat-column-MachineStatus {
+  /*text-align: center;
+  align-items: center;*/
+  display: flex;
+  justify-content: center;
+}
+
+

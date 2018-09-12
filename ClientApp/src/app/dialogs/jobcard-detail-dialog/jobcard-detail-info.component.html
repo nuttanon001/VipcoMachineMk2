@@ -1,0 +1,122 @@
+<div *ngIf="InfoValue;else elseBlock">
+  <form [formGroup]="InfoValueForm">
+    <div class="form-container-column">
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true" *ngIf="isSplitOption">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Split cutting plan</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify quality to split.
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!--SplitQuality-->
+          <mat-form-field hintLabel="Split quality">
+            <input matInput type="number" formControlName="SplitQuality"
+                   min="0" placeholder="Split quality max is {{qualityMax}}">
+            <mat-error *ngIf="InfoValueForm.controls.SplitQuality.hasError('max')">
+              Split max is {{qualityMax}}
+            </mat-error>
+          </mat-form-field>
+          <!--Command-->
+          <mat-action-row>
+            <button mat-button color="primary" (click)="endStep()" [disabled]="!InfoValueForm.valid">
+              <strong>End</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+        <!--Expansion1-->
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Detail require machine infomation</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the material, cutting-plan, standard-time and quality for detail require machine.
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!--CuttingPlanString-->
+          <mat-form-field hintLabel="Specify the cutting-plan">
+            <input matInput formControlName="CuttingPlanString"
+                   (click)="openDialogs('CuttingPlan')" required readonly
+                   class="click-input" placeholder="Cutting-plan/ShopDwg for detail">
+            <mat-error *ngIf="InfoValueForm.controls.CuttingPlanString.hasError('required')">
+              Cutting-plan is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <!--UnitNo-->
+          <mat-form-field hintLabel="Specify the unit-no">
+            <mat-select formControlName="UnitNo"
+                        placeholder="UnitNo for detail">
+              <mat-option>Select unit no</mat-option>
+              <mat-option *ngFor="let unitNumber of unitNumbers" [value]="unitNumber.Value">
+                {{ unitNumber.Lable }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--Material-->
+          <mat-form-field hintLabel="Specify the material">
+            <input matInput formControlName="Material" [matAutocomplete]="Material"
+                   maxlength="200"
+                   placeholder="Material for detail">
+
+            <mat-autocomplete #Material="matAutocomplete">
+              <mat-option *ngFor="let result of resultAutoComplate" [value]="result.AutoComplate">
+                <span>{{ result.AutoComplate }}</span>
+              </mat-option>
+            </mat-autocomplete>
+
+            <mat-hint [align]="end">{{InfoValueForm.controls.Material.value?.length || 0}}/200</mat-hint>
+            <mat-error *ngIf="InfoValueForm.controls.Material.hasError('required')">
+              Material is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <!--Quality-->
+          <mat-form-field hintLabel="Specify the quality">
+            <input matInput type="number" formControlName="Quality"
+                   min="0"
+                   placeholder="Quality for detail">
+            <mat-error *ngIf="InfoValueForm.controls.Quality.hasError('min')">
+              Quality min is 0
+            </mat-error>
+          </mat-form-field>
+          <!--StandardTimeString-->
+          <mat-form-field hintLabel="Specify the standard-time">
+            <input matInput formControlName="StandardTimeString"
+                   (click)="openDialogs('StandardTime')" readonly
+                   class="click-input" placeholder="Standard-time for detail">
+          </mat-form-field>
+          <!--Remark-->
+          <mat-form-field hintLabel="Specify the remark">
+            <textarea matInput placeholder="Remark for detail" rows="4"
+                      maxlength="200"
+                      formControlName="Remark">
+            </textarea>
+            <mat-hint [align]="end">{{InfoValueForm.controls.Remark.value?.length || 0}}/200</mat-hint>
+          </mat-form-field>
+          <!--Command-->
+          <mat-action-row>
+            <div *ngIf="isSplitOption;else elseEnd">
+              <button mat-button color="primary" (click)="nextStep()">
+                <strong>Next</strong>
+              </button>
+            </div>
+            <ng-template #elseEnd>
+              <button mat-button color="primary" (click)="endStep()" [disabled]="!InfoValueForm.valid">
+                <strong>End</strong>
+              </button>
+            </ng-template>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

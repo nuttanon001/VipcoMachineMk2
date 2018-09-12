@@ -1,0 +1,26 @@
+<div style="min-width:40vw;">
+  <H5 style="color:cadetblue">Change group machine.</H5>
+  <div class="child-container">
+    <div class="center-content">
+      <mat-form-field hintLabel="Specify the machine group">
+        <mat-select placeholder="Selected machine group" [(value)]="getValue">
+          <mat-option>-</mat-option>
+          <mat-option *ngFor="let typeMachine of typeMachines" [value]="typeMachine">
+            {{ typeMachine.TypeMachineCode }}-{{typeMachine.Name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="ml-1">
+      <button mat-mini-fab color="primary" (click)="onSelectedClick()"
+              [disabled]="!getValue"
+              matTooltip="add new data">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" (click)="onCancelClick()"
+              matTooltip="close dialog">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

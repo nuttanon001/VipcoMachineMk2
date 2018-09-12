@@ -1,0 +1,34 @@
+<div class="master-dialog-vh">
+  <H5 style="color:cadetblue">Selected Prject </H5>
+  <div class="child-container">
+    <div class="center-content" >
+      <div class="row-content" *ngIf="!InfoValue;else InfoBlock">
+        <dialog-project-table (returnSelected)="onSelectedValue($event)"></dialog-project-table>
+        <span class="mx-1"></span>
+        <div *ngIf="mode > 1">
+          <dialog-project-detail-table [fastSelected]="true" [dataRows]="projectDetails"
+                                       (returnSelected)="onSelectedOptionValue($event)"></dialog-project-detail-table>
+        </div>
+      </div>
+      <ng-template #InfoBlock>
+        <app-project-info [InfoValue]="InfoValue" (SubmitOrCancel)="onComplateOrCancelEntity($event)">
+        </app-project-info>
+      </ng-template>
+    </div>
+    <div class="right-content">
+      <button mat-mini-fab color="accent" (click)="onSelectedClick()" matTooltip="select"
+              [disabled]="(!getValue && !getValues) || InfoValue">
+        <mat-icon>offline_pin</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" (click)="onCancelClick()"
+              matTooltip="close dialog">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <hr />
+      <button mat-mini-fab color="primary" (click)="onNewEntity()"
+              matTooltip="add new data" [disabled]="!InfoValue">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="master-dialog-vh">
+  <H5 style="color:cadetblue">Select standard-time or new standard-time</H5>
+  <div *ngIf="onLoading" class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="child-container">
+    <div class="center-content">
+      <div *ngIf="!ShowDetail;else InfoBlock">
+        <div *ngIf="mode === 0;else ElseBlock">
+          <app-standard-time-table-extend (returnSelected)="onSelectedValue($event)"
+                                          (returnSelectedWith)="onDetailView($event)"
+                                          [isDialog]="!canEdit"></app-standard-time-table-extend>
+        </div>
+        <ng-template #ElseBlock>
+          <app-standard-time-table-extend (returnSelectesd)="onSelectedValues($event)"
+                                          [isMultiple]="true"
+                                          [isDialog]="!canEdit"></app-standard-time-table-extend>
+        </ng-template>
+      </div>
+      <ng-template #InfoBlock>
+        <app-standard-time-info-extend></app-standard-time-info-extend>
+      </ng-template>
+    </div>
+    <div class="right-content ml-1">
+      <button mat-mini-fab color="accent" (click)="onSelectedClick()" matTooltip="select"
+              [disabled]="(!getValue && !getValues)">
+        <mat-icon>offline_pin</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" (click)="onCancelClick()"
+              matTooltip="close dialog">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <hr />
+      <button mat-mini-fab color="primary" (click)="onDetailView()"
+              matTooltip="add new data" [disabled]="ShowDetail">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-mini-fab color="accent" (click)="onSubmit()"
+              matTooltip="Save"
+              [disabled]="!canSave">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

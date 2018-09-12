@@ -1,0 +1,66 @@
+<div *ngIf="InfoValue;else elseBlock">
+  <form [formGroup]="InfoValueForm">
+    <div class="form-container-column">
+      <mat-accordion class="headers-align">
+        <!--Expansion1-->
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Change actual man-hour infomation</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the actual man-hour, task machine.
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!--ActualManHours-->
+          <mat-form-field hintLabel="Specify the actual manhour">
+            <input matInput type="number" formControlName="ActualManHours"
+                   min="0" required
+                   placeholder="ActualManHours">
+            <mat-error *ngIf="InfoValueForm.controls.ActualManHours.hasError('min')">
+              Actual man hour min is 0
+            </mat-error>
+            <mat-error *ngIf="InfoValueForm.controls.ActualManHours.hasError('required')">
+              Actual man hour is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <!--PlanManHours-->
+          <mat-form-field>
+            <input matInput type="number" formControlName="PlanManHours"
+                   min="0" readonly
+                   placeholder="PlanManHours">
+          </mat-form-field>
+
+          <!--ActualStartDate-->
+          <mat-form-field>
+            <input matInput [matDatepicker]="ActualStartDate" formControlName="ActualStartDate"
+                   placeholder="Actual start">
+            <mat-datepicker-toggle matSuffix [for]="ActualStartDate"></mat-datepicker-toggle>
+            <mat-datepicker #ActualStartDate></mat-datepicker>
+          </mat-form-field>
+
+          <!--ActualEndDate-->
+          <mat-form-field>
+            <input matInput [matDatepicker]="ActualEndDate" formControlName="ActualEndDate"
+                   placeholder="Actual end">
+            <mat-datepicker-toggle matSuffix [for]="ActualEndDate"></mat-datepicker-toggle>
+            <mat-datepicker #ActualEndDate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="endStep()" [disabled]="!InfoValueForm.valid">
+              <strong>End</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

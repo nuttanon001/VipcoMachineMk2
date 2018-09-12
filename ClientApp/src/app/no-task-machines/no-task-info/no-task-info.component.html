@@ -1,0 +1,151 @@
+<div *ngIf="InfoValue;else elseBlock">
+  <form [formGroup]="InfoValueForm">
+    <div class="form-container-column">
+      <mat-accordion class="headers-align">
+        <!--Expansion0-->
+        <mat-expansion-panel *ngIf="jobMaster" [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Require Machine information</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Information for require machine / click for detail.
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!-- JobCardMasterNo -->
+          <mat-form-field>
+            <input matInput type="text" [value]="jobMaster.JobCardMasterNo"
+                   (click)="openDialog('JobCard')" readonly
+                   class="click-input" placeholder="Require-Machine No">
+          </mat-form-field>
+
+          <!-- TypeMachineString -->
+          <mat-form-field>
+            <input matInput type="text" [value]="jobMaster.TypeMachineString"
+                   (click)="openDialog('JobCard')" readonly
+                   class="click-input" placeholder="Type machine">
+          </mat-form-field>
+
+          <div *ngIf="jobMaster.JobCardDetails && jobMaster.JobCardDetails[0]">
+            <mat-form-field>
+              <input matInput type="text" [value]="jobMaster.JobCardDetails[0].CuttingPlanString"
+                     (click)="openDialog('JobCard')" readonly
+                     class="click-input" placeholder="Cuttingplan/ShopDrawing">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput type="text" [value]="jobMaster.JobCardDetails[0].Material"
+                     (click)="openDialog('JobCard')" readonly
+                     class="click-input" placeholder="Material">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput type="text" [value]="jobMaster.JobCardDetails[0].Quality"
+                     (click)="openDialog('JobCard')" readonly
+                     class="click-input" placeholder="Quality">
+            </mat-form-field>
+          </div>
+
+          <mat-action-row>
+            <button mat-button color="warn" (click)="prevStep()">
+              <strong>Previous</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+        <!--Expansion1-->
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Machine Work for other group</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the work machine for other work group information
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!-- TaskMachineName -->
+          <mat-form-field hintLabel="Code will automatically generated.">
+            <input matInput formControlName="NoTaskMachineCode"
+                   readonly
+                   placeholder="Code for task machine">
+          </mat-form-field>
+          <!-- WorkGroup -->
+          <mat-form-field hintLabel="Specify the work group assigned machine">
+            <input matInput type="text" formControlName="GroupMisString"
+                   (click)="openDialog('GroupMis')" readonly required
+                   class="click-input" placeholder="Select work group assigned machine">
+            <mat-error *ngIf="InfoValueForm.controls.GroupMisString.hasError('required')">
+              Work group is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Description -->
+          <mat-form-field hintLabel="Specify the description">
+            <textarea matInput formControlName="Description"
+                      maxlength="200" rows="4"
+                      placeholder="Description">
+            </textarea>
+            <mat-hint [align]="end">{{InfoValueForm.controls.Description.value?.length || 0}}/200</mat-hint>
+          </mat-form-field>
+
+          <!-- Remark -->
+          <mat-form-field hintLabel="Specify the remark">
+            <textarea matInput formControlName="Remark"
+                      maxlength="200" rows="4"
+                      placeholder="Remark">
+                </textarea>
+            <mat-hint [align]="end">{{InfoValueForm.controls.Remark.value?.length || 0}}/200</mat-hint>
+          </mat-form-field>
+
+          <!-- Quantity -->
+          <mat-form-field hintLabel="Specify the quantity">
+            <input matInput type="number" formControlName="Quantity"
+                   required min="0" autofocus
+                   placeholder="Quantity">
+            <mat-error *ngIf="InfoValueForm.controls.Quantity.hasError('required')">
+              Quantity is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="InfoValueForm.controls.Quantity.hasError('min')">
+              Quantity min is 0
+            </mat-error>
+          </mat-form-field>
+
+          <!-- SendDate -->
+          <mat-form-field>
+            <input matInput [matDatepicker]="Date" formControlName="Date"
+                   placeholder="Send date">
+            <mat-datepicker-toggle matSuffix [for]="Date"></mat-datepicker-toggle>
+            <mat-datepicker #Date></mat-datepicker>
+            <mat-error *ngIf="InfoValueForm.controls.Date.hasError('required')">
+              Send date is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Employee Assigned -->
+          <mat-form-field hintLabel="Specify the employee assigned machine">
+            <input matInput type="text" formControlName="AssignedByString"
+                   (click)="openDialog('Employee')" readonly required
+                   class="click-input" placeholder="Select employee assigned other work group">
+            <mat-error *ngIf="InfoValueForm.controls.AssignedByString.hasError('required')">
+              Employee is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="nextStep()">
+              <strong>Next</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+
+      </mat-accordion>
+    </div>
+  </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

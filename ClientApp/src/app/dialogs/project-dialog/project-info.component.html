@@ -1,0 +1,76 @@
+<div *ngIf="InfoValue; else elseBlock">
+  <form [formGroup]="InfoValueForm">
+    <div class="form-container-column">
+      <mat-accordion class="headers-align">
+        <!--Expansion1-->
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Specify project information</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify name and description for project information
+              <mat-icon>clear_all_black</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-form-field hintLabel="Code for project">
+            <input matInput formControlName="ProjectCode" required maxlength="50" placeholder="Project number or code">
+            <mat-hint [align]="end">{{InfoValueForm.controls.ProjectCode.value?.length || 0}}/50</mat-hint>
+            <mat-error *ngIf="InfoValueForm.controls.ProjectCode.hasError('required')">
+              Project code is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Name for project">
+            <input matInput formControlName="ProjectName" maxlength="200" placeholder="Project name">
+            <mat-hint [align]="end">{{InfoValueForm.controls.ProjectName.value?.length || 0}}/200</mat-hint>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="onSubmit()" [disabled]="!InfoValueForm.valid">Save</button>
+            <button mat-button color="warn" (click)="onCancel()">Cancel</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+
+        <!--Expansion2-->
+        <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Specify project date start and date ended </strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify start date and date ended for project information
+              <mat-icon>date_range_black</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mat-form-field>
+            <input matInput [matDatepicker]="StartDate" formControlName="StartDate"
+                   placeholder="Date start for project">
+            <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+            <mat-datepicker #StartDate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput [matDatepicker]="EndDate" formControlName="EndDate"
+                   placeholder="Date ended for project" [min]="InfoValueForm.controls.StartDate.value">
+            <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+            <mat-datepicker #EndDate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="onSubmit()" [disabled]="!InfoValueForm.valid">Save</button>
+            <button mat-button color="warn" (click)="onCancel()">Cancel</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

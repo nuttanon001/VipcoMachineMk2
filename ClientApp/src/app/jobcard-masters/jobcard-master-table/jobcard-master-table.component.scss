@@ -1,0 +1,41 @@
+@import "../../shared/styles/table.style.scss";
+
+/*.mat-row, .mat-header-row {
+  width: 100vw; //PERSONALLY I HAD 45 COLUMNS
+}*/
+
+.is-cancel {
+  background-color: red;
+
+  .mat-cell {
+    color: white;
+  }
+  // color: red !important;
+}
+
+.is-require {
+  background-color: darksalmon;
+
+  .mat-cell {
+    color: white;
+  }
+  // color: red !important;
+}
+
+.is-wait {
+  background-color: gold;
+  // color: gold !important;
+}
+
+.is-complate {
+  background-color: lightgreen;
+  // color: lightgreen !important;
+}
+
+.mat-column-StatusString, .mat-column-JobCardDate, .mat-column-EmployeeRequireString {
+  flex: 0 0 100px;
+}
+
+.mat-column-ProjectDetailString, .mat-column-JobCardMasterNo {
+  flex: 0 0 175px;
+}

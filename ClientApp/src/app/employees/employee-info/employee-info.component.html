@@ -1,0 +1,116 @@
+<div *ngIf="InfoValue;else elseBlock">
+  <form [formGroup]="InfoValueForm">
+    <div class="form-container-column">
+      <mat-accordion class="headers-align">
+        <!--Expansion1-->
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Employee infomation</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the code, name and group for employee
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!--Row1-->
+          <mat-form-field hintLabel="Specify the employee code">
+            <input matInput formControlName="EmpCode"
+                   required maxlength="50"
+                   placeholder="Code for employee">
+            <mat-hint [align]="end">{{InfoValueForm.controls.EmpCode.value?.length || 0}}/50</mat-hint>
+            <mat-error *ngIf="InfoValueForm.controls.EmpCode.hasError('required')">
+              employee code is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the employee title">
+            <mat-select formControlName="Title" required>
+              <mat-option>-</mat-option>
+              <mat-option [value]="'นาย'">นาย</mat-option>
+              <mat-option [value]="'นาง'">นาง</mat-option>
+              <mat-option [value]="'นางสาว'">นางสาว</mat-option>
+              <mat-option [value]="'อื่นๆ'">อื่นๆ</mat-option>
+            </mat-select>
+            <mat-error *ngIf="InfoValueForm.controls.Title.hasError('required')">
+              employee title is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the employee name of thai">
+            <input matInput type="text" formControlName="NameThai"
+                   required maxlength="100"
+                   placeholder="Name for employee">
+            <mat-hint [align]="end">{{InfoValueForm.controls.NameThai.value?.length || 0}}/100</mat-hint>
+            <mat-error *ngIf="InfoValueForm.controls.NameThai.hasError('required')">
+              employee name of thai is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the employee name of english">
+            <input matInput type="text" formControlName="NameEng"
+                   maxlength="100"
+                   placeholder="Name for employee">
+            <mat-hint [align]="end">{{InfoValueForm.controls.NameEng.value?.length || 0}}/100</mat-hint>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="nextStep()">
+              <strong>Next</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+
+        <!--Expansion2-->
+        <mat-expansion-panel class="my-1" [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>Rate information</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Specify the rate and rate-unit for employee
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mat-form-field hintLabel="Specify the employee work group">
+            <input matInput formControlName="GroupName"
+                   required readonly
+                   placeholder="Work group for employee"
+                   class="click-input" (click)="openDialog('GroupMis')">
+            <mat-error *ngIf="InfoValueForm.controls.GroupName.hasError('required')">
+              employee work group is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Specify the employee type">
+            <mat-select formControlName="TypeEmployee" required>
+              <mat-option>-</mat-option>
+              <mat-option [value]="1">พนักงานตามโครงการ</mat-option>
+              <mat-option [value]="2">พนักงานประจำรายชั่วโมง</mat-option>
+              <mat-option [value]="3">พนักงานประจำรายเดือน</mat-option>
+              <mat-option [value]="4">พนักงานทดลองงาน</mat-option>
+              <mat-option [value]="5">พนักงานพม่า</mat-option>
+            </mat-select>
+            <mat-error *ngIf="InfoValueForm.controls.TypeEmployee.hasError('required')">
+              employee type is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-action-row>
+            <button mat-button color="warn" (click)="prevStep()">
+              <strong>Previous</strong>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+        
+      </mat-accordion>
+    </div>
+  </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

@@ -1,0 +1,41 @@
+@import "../../shared/styles/table.style.scss";
+
+.mat-row, .mat-header-row {
+  width: 125vw; //PERSONALLY I HAD 45 COLUMNS
+}
+
+.is-cancel {
+  background-color: red;
+
+  .mat-cell {
+    color: white;
+  }
+  // color: red !important;
+}
+
+.is-require {
+  background-color: darksalmon;
+
+  .mat-cell {
+    color: white;
+  }
+  // color: red !important;
+}
+
+.is-wait {
+  background-color: gold;
+  // color: gold !important;
+}
+
+.is-complate {
+  background-color: lightgreen;
+  // color: lightgreen !important;
+}
+
+.mat-column-TaskMachineStatusString {
+  flex: 0 0 100px;
+}
+
+.mat-column-PlannedStartDate {
+  flex: 0 0 150px;
+}

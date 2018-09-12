@@ -1,0 +1,9 @@
+@import "../../shared/styles/table.style.scss";
+
+.mat-column-NoTaskMachineCode {
+  flex: 0 0 125px;
+}
+
+.mat-column-AssignedByString, .mat-column-Command {
+  flex: 0 0 150px !important;
+}

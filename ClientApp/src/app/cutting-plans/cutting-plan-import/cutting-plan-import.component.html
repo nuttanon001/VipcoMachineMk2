@@ -1,0 +1,98 @@
+<div class="master-container">
+  <div>
+    <!--Title-->
+    <h4 class="card-title text-info">
+      Import cutting-plan.
+    </h4>
+  </div>
+  <div class="child-container" style="min-height:35px;">
+    <div class="center-content">
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <input type="file" accept=".csv" id="inputFile" #inputFile (change)="onFileChange($event)">
+
+      <div class="mat-elevation-z8">
+        <div *ngIf="isLoadingResults" class="loading-shade">
+          <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+        </div>
+        <mat-table #table [dataSource]="dataSource" matSort matSortDisableClear
+                   matSortActive="CuttingPlan" matSortDirection="asc">
+          <!-- CuttingPlanNo Column -->
+          <ng-container matColumnDef="JobNo">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Project number
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row?.JobNo || "-"}}</mat-cell>
+          </ng-container>
+          <!-- ProjectCodeString Column -->
+          <ng-container matColumnDef="Level23">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Bom level 2/3
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row?.Level23 || "-"}}</mat-cell>
+          </ng-container>
+          <!-- Description Column -->
+          <ng-container matColumnDef="CuttingPlan">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Cutting plan
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{(row?.CuttingPlan) || "-"}}</mat-cell>
+          </ng-container>
+          <!-- MaterialSize Column -->
+          <ng-container matColumnDef="MaterialSize">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              MaterialSize
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{(row?.MaterialSize) || "-"}}</mat-cell>
+          </ng-container>
+          <!-- MaterialGrade Column -->
+          <ng-container matColumnDef="MaterialGrade">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              MaterialGrade
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{(row?.MaterialGrade) || "-"}}</mat-cell>
+          </ng-container>
+          <!-- Quantity Column -->
+          <ng-container matColumnDef="Quantity">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Quantity
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{(row?.Quantity) || "-"}}</mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"
+                   [ngClass]="{'mat-row-highlight': selectedRow === row}"
+                   (click)="selection.toggle(row)"></mat-row>
+        </mat-table>
+
+        <!--<mat-paginator [length]="resultsLength" [pageSize]="30">
+    </mat-paginator>-->
+
+        <mat-paginator #paginator
+                       [pageSize]="10"
+                       [pageSizeOptions]="[10, 25, 50]"
+                       [length]="resultsLength"
+                       [showFirstLastButtons]="true">
+        </mat-paginator>
+      </div>
+    </div>
+    <div class="right-content">
+      <button mat-mini-fab color="primary" (click)="onOpenDownLoadFormatFile('/files/ImportFormat.csv')"
+              matTooltipPosition="left" matTooltip="Download file import">
+        <mat-icon>backup</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" (click)="onClearData()"
+              matTooltipPosition="left" matTooltip="Clear data">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <hr />
+      <button mat-mini-fab color="accent" (click)="onSubmit()" class="mt-1"
+              matTooltipPosition="left" matTooltip="Import file"
+              [disabled]="!importDatas.length">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+

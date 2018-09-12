@@ -1,0 +1,191 @@
+<div *ngIf="InfoValue;else elseBlock">
+  <form [formGroup]="InfoValueForm">
+        <div class="form-container-column">
+          <mat-accordion class="headers-align">
+            <!--Expansion0-->
+            <mat-expansion-panel class="my-1" [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+              <!--Header-->
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <strong>Require machine infomation</strong>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <!--JobCardMasterNo-->
+              <mat-form-field hintLabel="Code will automatically generated.">
+                <input matInput formControlName="JobCardMasterNo"
+                       readonly maxlength="50"
+                       placeholder="Code for require machine">
+                <mat-hint [align]="end">{{InfoValueForm.controls.JobCardMasterNo.value?.length || 0}}/50</mat-hint>
+              </mat-form-field>
+              <!--TypeMachineId-->
+              <mat-form-field hintLabel="Specify the machine group" class="readonly-wrapper">
+                <mat-select formControlName="TypeMachineId" class="readonly-block"
+                            required
+                            placeholder="Selected machine group">
+                  <mat-option>-</mat-option>
+                  <mat-option *ngFor="let typeMachine of typeMachines" [value]="typeMachine.TypeMachineId">
+                    {{ typeMachine.TypeMachineCode }}-{{typeMachine.Name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="InfoValueForm.controls.TypeMachineId.hasError('required')">
+                  Machine group is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+              <!--JobCardDate-->
+              <mat-form-field>
+                <input matInput [matDatepicker]="JobCardDate" formControlName="JobCardDate"
+                       placeholder="Require machine date" [readonly]="denySave">
+                <mat-datepicker-toggle matSuffix [for]="JobCardDate"></mat-datepicker-toggle>
+                <mat-datepicker #JobCardDate></mat-datepicker>
+                <mat-error *ngIf="InfoValueForm.controls.JobCardDate.hasError('required')">
+                  Require machine date is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+              <!--DueDate-->
+              <mat-form-field>
+                <input matInput [matDatepicker]="DueDate" formControlName="DueDate"
+                       placeholder="Due date require machine" [readonly]="denySave">
+                <mat-datepicker-toggle matSuffix [for]="DueDate"></mat-datepicker-toggle>
+                <mat-datepicker #DueDate></mat-datepicker>
+                <mat-error *ngIf="InfoValueForm.controls.DueDate.hasError('required')">
+                  Due date is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+              <!--EmployeeWriteString-->
+              <mat-form-field hintLabel="Specify the employee require machine">
+                <input matInput type="text" formControlName="EmployeeWriteString"
+                       (click)="openDialog('Employee')" readonly required
+                       class="click-input" placeholder="Select employee require">
+                <mat-error *ngIf="InfoValueForm.controls.EmployeeWriteString.hasError('required')">
+                  Employee is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+              <!--EmployeeRequireString-->
+              <mat-form-field hintLabel="Specify the work group require machine">
+                <input matInput type="text" formControlName="EmployeeRequireString"
+                       (click)="openDialog('GroupMis')" readonly required
+                       class="click-input" placeholder="Select work group require">
+                <mat-error *ngIf="InfoValueForm.controls.EmployeeRequireString.hasError('required')">
+                  Work group is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+              <!--Description-->
+              <mat-form-field hintLabel="Specify the description">
+                <textarea matInput formControlName="Description"
+                          maxlength="200" rows="4" [readonly]="denySave"
+                          placeholder="Description for require-machine">
+            </textarea>
+                <mat-hint [align]="end">{{InfoValueForm.controls.Description.value?.length || 0}}/200</mat-hint>
+              </mat-form-field>
+              <!--Remark-->
+              <mat-form-field hintLabel="Specify the remark">
+                <textarea matInput formControlName="Remark"
+                          maxlength="200" rows="4" [readonly]="denySave"
+                          placeholder="Remark for require-machine">
+            </textarea>
+                <mat-hint [align]="end">{{InfoValueForm.controls.Remark.value?.length || 0}}/200</mat-hint>
+              </mat-form-field>
+              <!--ProjectDetailString-->
+              <mat-form-field hintLabel="Specify the project number">
+                <input matInput formControlName="ProjectDetailString"
+                       (click)="openDialog('Project')" readonly
+                       class="click-input" placeholder="Project number for require machine">
+                <mat-error *ngIf="InfoValueForm.controls.ProjectDetailString.hasError('required')">
+                  Project number is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-form-field hintLabel="Mail for communicate.">
+                <input matInput formControlName="MailReply"
+                       maxlength="200"
+                       placeholder="Mail reply">
+                <mat-hint [align]="end">{{InfoValueForm.controls.MailReply.value?.length || 0}}/200</mat-hint>
+              </mat-form-field>
+
+              <mat-action-row>
+                <button mat-button color="primary" (click)="nextStep()">
+                  <strong>Next</strong>
+                </button>
+              </mat-action-row>
+            </mat-expansion-panel>
+            <!--Expansion1-->
+            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+              <!--Header-->
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <strong>Cutting plan/Shop drawing infomation</strong>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="form-container-column" *ngIf="InfoValue.JobCardDetails">
+                <app-jobcard-master-table-extend [dataRows]="InfoValue.JobCardDetails" (returnSelected)="OnDetailSelect($event)"
+                                                 [readOnly]="denySave" [optionEdit1]="optionEdit">
+                </app-jobcard-master-table-extend>
+              </div>
+              <mat-action-row>
+                <button mat-button color="warn" (click)="prevStep()">
+                  <strong>Previous</strong>
+                </button>
+                <button mat-button color="primary" (click)="nextStep()">
+                  <strong>Next</strong>
+                </button>
+              </mat-action-row>
+            </mat-expansion-panel>
+            <!--Expansion2-->
+            <mat-expansion-panel class="my-1" [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Attach file panel
+                </mat-panel-title>
+                <mat-panel-description>
+                  Total attach files {{attachFiles?.length || 0}}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <!--AttactFile-->
+              <div class="row-form">
+                <app-attach-file id="AttactFile" (results)="onUpdateAttachResults($event)" [readOnly]="true">
+                </app-attach-file>
+
+                <div *ngIf="attachFiles && attachFiles.length > 0">
+                  <table class="table table-hover table-sm small">
+                    <colgroup>
+                      <col span="1" style="width: 80%;">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>File Name</th>
+                        <th>Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let file of attachFiles; let num2 = index">
+                        <td (click)="onOpenNewLink(file.FileAddress)" style="cursor:pointer;">
+                          {{num2 + 1}}. {{file.FileName}}
+                        </td>
+                        <td>
+                          <div *ngIf="!denySave">
+                            <a class="btn btn-sm btn-danger" matTooltip="Remove Attach File" (click)="onDeleteAttachFile(file)">
+                              <em class="fa fa-remove"></em>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <mat-action-row>
+                <button mat-button color="warn" (click)="prevStep()">
+                  <strong>Previous</strong>
+                </button>
+              </mat-action-row>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </form>
+</div>
+
+<ng-template #elseBlock>
+  <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
+  Waiting... for loading
+</ng-template>

@@ -1,0 +1,7 @@
+@import "../../shared/styles/master.style.scss";
+@import "../../shared/styles/table.style.scss";
+
+.child-container {
+  display: flex;
+  flex-direction: row;
+}
