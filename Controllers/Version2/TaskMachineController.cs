@@ -512,10 +512,10 @@ namespace VipcoMachine.Controllers.Version2
 
                     var filters = string.IsNullOrEmpty(Schedule.Filter) ? new string[] { "" }
                                        : Schedule.Filter.ToLower().Split(null);
-                    foreach (var keyword in filters)
+                    foreach (var temp in filters)
                     {
-                        string temp = keyword;
-                        predicate = predicate.Or(x => x.JobCardDetail.CuttingPlan.CuttingPlanNo.ToLower().Trim().Contains(keyword) ||
+                        string keyword = temp;
+                        predicate = predicate.And(x => x.JobCardDetail.CuttingPlan.CuttingPlanNo.ToLower().Trim().Contains(keyword) ||
                                                       x.JobCardDetail.CuttingPlan.MaterialSize.ToLower().Trim().Contains(keyword) ||
                                                       x.Machine.MachineName.ToLower().Trim().Contains(keyword) ||
                                                       x.TaskMachineName.ToLower().Trim().Contains(keyword) ||
@@ -588,13 +588,13 @@ namespace VipcoMachine.Controllers.Version2
                         List<DateTime?> ListDate = new List<DateTime?>()
                         {
                             //START Date
-                            HasData.Min(x => x.CreateDate),
+                            //HasData.Min(x => x.CreateDate),
                             HasData.Min(x => x.TaskDueDate),
                             HasData.Min(x => x?.JobCardDetail?.JobCardMaster?.DueDate)  ?? null,
                             HasData.Min(x => x?.PlannedStartDate) ?? null,
                             HasData.Min(x => x?.PlannedEndDate) ?? null,
                             //END Date
-                            HasData.Max(x => x.CreateDate),
+                            //HasData.Max(x => x.CreateDate),
                             HasData.Max(x => x.TaskDueDate),
                             HasData.Max(x => x?.JobCardDetail?.JobCardMaster?.DueDate) ?? null,
                             HasData.Max(x => x?.PlannedStartDate) ?? null,
@@ -704,7 +704,7 @@ namespace VipcoMachine.Controllers.Version2
                                 // For Plan
                                 if (Data.PlannedStartDate != null && Data.PlannedEndDate != null)
                                 {
-                                    foreach (DateTime day in EachDate.EachDate(Data.PlannedStartDate, Data.PlannedEndDate))
+                                    foreach (DateTime day in EachDate.EachDate(Data.PlannedStartDate.Date, Data.PlannedEndDate.Date))
                                     {
                                         if (ColumnGroupBtm.Any(x => x.Key == day.Date))
                                             rowData.Add(ColumnGroupBtm.FirstOrDefault(x => x.Key == day.Date).Value, 1);
@@ -714,7 +714,7 @@ namespace VipcoMachine.Controllers.Version2
                                 if (Data.ActualStartDate != null)
                                 {
                                     var EndDate = Data.ActualEndDate ?? (MaxDate > DateTime.Today ? DateTime.Today : MaxDate);
-                                    foreach (DateTime day in EachDate.EachDate(Data.ActualStartDate.Value, EndDate.Value))
+                                    foreach (DateTime day in EachDate.EachDate(Data.ActualStartDate.Value.Date, EndDate.Value.Date))
                                     {
                                         if (ColumnGroupBtm.Any(x => x.Key == day.Date))
                                         {
@@ -803,10 +803,11 @@ namespace VipcoMachine.Controllers.Version2
                                 Employee4 = "-",
                                 Level23 = Level23,
                                 JobNo = JobNo,
+                                Weight = string.Format("{0:#,##0} kg.", paper.Weight ?? 0),
                                 Remark2 = jobMaster?.Description ?? "",
                                 Mate1 = paper?.JobCardDetail?.Material ?? "-",
                                 Plan = paper.PlannedStartDate.ToString("dd/MM/yy") + "  ถึง  " + paper.PlannedEndDate.ToString("dd/MM/yy"),
-                                Recevied = jobMaster?.EmployeeRequire?.NameThai ?? "-",
+                                Recevied = paper.ReceiveBy ?? "-",
                                 Remark = paper?.Description ?? "-",
                                 ShopDrawing = paper?.JobCardDetail?.CuttingPlan?.CuttingPlanNo ?? "-",
                                 TaskMachineNo = paper?.TaskMachineName ?? "",

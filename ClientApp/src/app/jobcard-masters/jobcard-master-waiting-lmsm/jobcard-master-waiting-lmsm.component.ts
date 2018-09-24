@@ -25,7 +25,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   styleUrls: ['./jobcard-master-waiting-lmsm.component.scss']
 })
 export class JobcardMasterWaitingLmsmComponent implements OnInit, OnDestroy {
-
   constructor(
     private service: JobcardMasterService,
     private serviceJobDetail: JobcardDetailService,
@@ -127,7 +126,7 @@ export class JobcardMasterWaitingLmsmComponent implements OnInit, OnDestroy {
         let Width125: number = 125;
         let Width150: number = 200;
         // column Row1
-        
+
         this.columns = [
           // { header: "GroupMachine", field: "GroupMachine", width: Width100 },
           { header: "JobNumber", field: "JobNumber", width: Width150 },
@@ -222,8 +221,25 @@ export class JobcardMasterWaitingLmsmComponent implements OnInit, OnDestroy {
       this.serviceDialogs.dialogSelectRequireMachineLmSm(infoValue, this.viewContainerRef, true)
         .subscribe(jobcardDetail => {
           if (jobcardDetail) {
-            if (jobcardDetail.JobCardDetailId) {
+            if (jobcardDetail.JobCardDetailId > 0) {
               this.router.navigate(["task-machine/", jobcardDetail.JobCardDetailId]);
+            } else if (jobcardDetail.JobCardDetailId === -1) {
+              if (this.serviceAuth.getAuth.LevelUser < 2) {
+                this.serviceDialogs.error("Access Deny", "Access is restricted. please contact administrator !!!", this.viewContainerRef)
+                  .subscribe();
+              } else {
+                this.serviceDialogs.confirmMessage("Question Message", "Do you want to cancel requrie machine job ?", this.viewContainerRef)
+                  .subscribe(result => {
+                    if (result.result) {
+                      infoValue.Remark = result.message;
+                      infoValue.Modifyer = this.serviceAuth.getAuth.UserName;
+                      this.service.cancelJobCardOnlyLmSm(infoValue)
+                        .subscribe(result => {
+                          this.onGetData(this.schedule);
+                        });
+                    }
+                  });
+              }
             } else {
               jobcardDetail.Creator = this.serviceAuth.getAuth.UserName || "";
               this.serviceJobDetail.addModel(jobcardDetail)

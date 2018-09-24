@@ -28,6 +28,18 @@ export class JobcardMasterService extends BaseRestService<JobcardMaster> {
     let url: string = `${this.baseUrl}CheckCuttingPlanWaiting/`;
     return this.http.get<any>(url).pipe(catchError(this.handleError("Check cutting plan from api")));
   }
+
+  /**
+   * cancelJobCardOnlyLmSm
+   * @param jobcardMaster
+   */
+  cancelJobCardOnlyLmSm(jobcardMaster: JobcardMaster): Observable<any> {
+    return this.http.post<any>(this.baseUrl + "CancelJobMaster/", JSON.stringify(jobcardMaster), {
+      headers: new HttpHeaders({ "Content-Type": "application/json" }),
+    }).pipe(catchError(this.handleError("Cancel require machine from api fail", {})));
+  }
+
+
   /**
  * GetWaitJobCardScheduleOnlyLmSm
  * @param schedule

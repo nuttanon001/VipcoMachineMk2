@@ -61,6 +61,10 @@ import { ShareService } from "./shared/share.service";
         canActivate: [AuthGuard]
       },
       {
+        path: "chart-data",
+        loadChildren: "./chart-datas/chart-data.module#ChartDataModule",
+      },
+      {
         path: "machine",
         loadChildren: "./machines/machine.module#MachineModule",
         canActivate: [AuthGuard]

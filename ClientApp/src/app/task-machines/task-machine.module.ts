@@ -20,8 +20,6 @@ import { TaskMachineMasterComponent } from './task-machine-master/task-machine-m
 import { TaskMachineScheduleComponent } from './task-machine-schedule/task-machine-schedule.component';
 import { TaskMachineProgressTableComponent } from './task-machine-progress-table/task-machine-progress-table.component';
 import { StandardTimeService } from '../standard-times/shared/standard-time.service';
-import { TaskMachineReportComponent } from './task-machine-report/task-machine-report.component';
-import { TaskMachineChartComponent } from './task-machine-chart/task-machine-chart.component';
 
 @NgModule({
   imports: [
@@ -37,8 +35,6 @@ import { TaskMachineChartComponent } from './task-machine-chart/task-machine-cha
     TaskMachineMasterComponent,
     TaskMachineScheduleComponent,
     TaskMachineProgressTableComponent,
-    TaskMachineReportComponent,
-    TaskMachineChartComponent,
   ],
   providers: [
     EmployeeService,

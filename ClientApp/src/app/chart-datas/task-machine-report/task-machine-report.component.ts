@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskMachineService } from '../shared/task-machine.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TypeMachineService } from '../../machines/shared/type-machine.service';
-import { OptionChart } from '../shared/option-chart.model';
 import { TypeMachine } from '../../machines/shared/type-machine.model';
-import { DataChart } from '../shared/data-chart.model';
+import { TaskMachineService } from '../../task-machines/shared/task-machine.service';
+import { OptionChart } from '../../task-machines/shared/option-chart.model';
+import { DataChart } from '../../task-machines/shared/data-chart.model';
 
 @Component({
   selector: 'app-task-machine-report',

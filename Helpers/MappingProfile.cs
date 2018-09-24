@@ -96,9 +96,11 @@ namespace VipcoMachine.Helpers
                            o => o.MapFrom(s => s.EmployeeWrite == null ? "-" : $"{s.EmployeeWrite.NameThai}"))
                 .ForMember(x => x.EmployeeWrite, o => o.Ignore())
                 // EmployeeRequire
-                .ForMember(x => x.EmployeeRequireString,
+                .ForMember(x => x.GroupMisString,
                            o => o.MapFrom(s => s.EmployeeGroup == null ? "-" : $"{s.EmployeeGroup.Description}"))
                 .ForMember(x => x.EmployeeGroup, o => o.Ignore())
+                .ForMember(x => x.EmployeeRequireString,
+                           o => o.MapFrom(s => s.EmployeeRequire == null ? "-" : $"{s.EmployeeRequire.NameThai}"))
                 .ForMember(x => x.EmployeeRequire, o => o.Ignore());
 
             #endregion

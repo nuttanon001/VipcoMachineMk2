@@ -62,10 +62,10 @@
               </mat-form-field>
               <!--EmployeeRequireString-->
               <mat-form-field hintLabel="Specify the work group require machine">
-                <input matInput type="text" formControlName="EmployeeRequireString"
+                <input matInput type="text" formControlName="GroupMisString"
                        (click)="openDialog('GroupMis')" readonly required
                        class="click-input" placeholder="Select work group require">
-                <mat-error *ngIf="InfoValueForm.controls.EmployeeRequireString.hasError('required')">
+                <mat-error *ngIf="InfoValueForm.controls.GroupMisString.hasError('required')">
                   Work group is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
@@ -94,12 +94,29 @@
                   Project number is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
-              
+
               <mat-form-field hintLabel="Mail for communicate.">
                 <input matInput formControlName="MailReply"
                        maxlength="200"
                        placeholder="Mail reply">
                 <mat-hint [align]="end">{{InfoValueForm.controls.MailReply.value?.length || 0}}/200</mat-hint>
+              </mat-form-field>
+
+              <!--EmployeeRequireString-->
+              <mat-form-field hintLabel="Specify the employee require machine">
+                <input matInput type="text" formControlName="EmployeeRequireString"
+                       (click)="openDialog('Employee2')" readonly
+                       class="click-input" placeholder="Employee receive mat'l">
+              </mat-form-field>
+
+              <!-- Weight -->
+              <mat-form-field hintLabel="Specify the weight">
+                <input matInput type="number" formControlName="Weight"
+                       min="0"
+                       placeholder="Weight quality(Kg.)">
+                <mat-error *ngIf="InfoValueForm.controls.Weight.hasError('min')">
+                  Weight min is 0
+                </mat-error>
               </mat-form-field>
 
               <mat-action-row>

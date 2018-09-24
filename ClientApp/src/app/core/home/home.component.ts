@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
   }
 
   onOpenNewLink(): void {
-    let link: string = "files/maintenance_doc.pdf";
+    let link: string = "files/machine_doc.pdf";
     if (link) {
       window.open(link, "_blank");
     }

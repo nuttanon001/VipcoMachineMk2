@@ -13,5 +13,6 @@ namespace VipcoMachine.ViewModels
         public string StatusString { get; set; }
         public string EmployeeRequireString { get; set; }
         public string EmployeeWriteString { get; set; }
+        public string GroupMisString { get; set; }
     }
 }

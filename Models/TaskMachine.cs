@@ -30,7 +30,8 @@ namespace VipcoMachine.Models
         public double? PlanManHours { get; set; }
         public double? ActualManHours { get; set; }
         public int? HasOverTime { get; set; }
-
+        [StringLength(200)]
+        public string ReceiveBy { get; set; }
         // FK
         // Machine
         public int? MachineId { get; set; }

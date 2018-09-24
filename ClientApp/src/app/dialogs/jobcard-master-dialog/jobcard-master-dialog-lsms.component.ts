@@ -47,8 +47,11 @@ export class JobcardMasterDialogLmSmComponent extends BaseDialogViewComponent<Jo
     }
   }
 
-  onSelectedClick(option?:number): void {
-    this.dialogRef.close(option);
+  onSelectedClick(option?: number): void {
+    let value: JobcardDetail = {
+      JobCardDetailId : -1
+    }
+    this.dialogRef.close(value);
   }
 
   onSelected(value?: JobcardDetail): void {

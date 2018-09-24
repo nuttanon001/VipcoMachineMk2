@@ -127,7 +127,7 @@ export abstract class BaseScheduleComponent<Model, Service extends BaseRestServi
     // filters: FilterMetadata object having field as key and filter value, filter matchMode as value
 
     if (!this.loading) {
-      console.log("loadDataLazy");
+      // console.log("loadDataLazy");
       // set first
       this.first = event.first;
       // imitate db connection over a network
@@ -155,7 +155,7 @@ export abstract class BaseScheduleComponent<Model, Service extends BaseRestServi
       this.subscription.unsubscribe();
     }
 
-    console.log('reloaddata');
+    // console.log('reloaddata');
 
     this.subscription = Observable.interval(1000)
       .take(this.time).map((x) => x + 1)

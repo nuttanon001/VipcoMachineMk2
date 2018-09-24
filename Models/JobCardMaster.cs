@@ -26,7 +26,7 @@ namespace VipcoMachine.Models
         public DateTime? CreateDate { get; set; }
         public string Modifyer { get; set; }
         public DateTime? ModifyDate { get; set; }
-
+        public double? Weight { get; set; }
         //FK
         // EmployeeWrite
         public string EmpWrite { get; set; }

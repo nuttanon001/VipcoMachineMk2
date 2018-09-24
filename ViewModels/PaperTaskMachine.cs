@@ -30,5 +30,7 @@ namespace VipcoMachine.ViewModels
         public string Plan { get; set; }
         public string Actual { get; set; }
         public string Remark { get; set; }
+        public string Weight { get; set; }
+        public string EmpRec { get; set; }
     }
 }

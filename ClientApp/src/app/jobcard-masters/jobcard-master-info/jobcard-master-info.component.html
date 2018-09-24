@@ -18,6 +18,7 @@
                   Specify the type-machine, jobnumber, require-date and due-date for require machine
                 </mat-panel-description>
               </mat-expansion-panel-header>
+
               <!--JobCardMasterNo-->
               <mat-form-field hintLabel="Code will automatically generated.">
                 <input matInput formControlName="JobCardMasterNo"
@@ -25,6 +26,7 @@
                        placeholder="Code for require machine">
                 <mat-hint [align]="end">{{InfoValueForm.controls.JobCardMasterNo.value?.length || 0}}/50</mat-hint>
               </mat-form-field>
+
               <!--TypeMachineId-->
               <mat-form-field hintLabel="Specify the machine group">
                 <mat-select formControlName="TypeMachineId"
@@ -39,6 +41,7 @@
                   Machine group is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
+
               <!--JobCardDate-->
               <mat-form-field>
                 <input matInput [matDatepicker]="JobCardDate" formControlName="JobCardDate" readonly
@@ -49,9 +52,10 @@
                   Require machine date is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
+
               <!--DueDate-->
               <mat-form-field>
-                <input matInput [matDatepicker]="DueDate" formControlName="DueDate" readonly
+                <input matInput [matDatepicker]="DueDate" formControlName="DueDate" readonly required
                        placeholder="Due date require machine" [min]="InfoValueForm.controls.JobCardDate.value">
                 <mat-datepicker-toggle matSuffix [for]="DueDate"></mat-datepicker-toggle>
                 <mat-datepicker #DueDate></mat-datepicker>
@@ -59,6 +63,7 @@
                   Due date is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
+
               <!--EmployeeWriteString-->
               <mat-form-field hintLabel="Specify the employee require machine">
                 <input matInput type="text" formControlName="EmployeeWriteString"
@@ -68,46 +73,68 @@
                   Employee is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
+
               <!--EmployeeRequireString-->
               <mat-form-field hintLabel="Specify the work group require machine">
-                <input matInput type="text" formControlName="EmployeeRequireString"
+                <input matInput type="text" formControlName="GroupMisString"
                        (click)="openDialog('GroupMis')" readonly required
                        class="click-input" placeholder="Select work group require">
-                <mat-error *ngIf="InfoValueForm.controls.EmployeeRequireString.hasError('required')">
+                <mat-error *ngIf="InfoValueForm.controls.GroupMisString.hasError('required')">
                   Work group is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
+
               <!--Description-->
               <mat-form-field hintLabel="Specify the description">
                 <textarea matInput formControlName="Description"
                           maxlength="200" rows="4"
                           placeholder="Description for require-machine">
-            </textarea>
+                </textarea>
                 <mat-hint [align]="end">{{InfoValueForm.controls.Description.value?.length || 0}}/200</mat-hint>
               </mat-form-field>
+
               <!--Remark-->
               <mat-form-field hintLabel="Specify the remark">
                 <textarea matInput formControlName="Remark"
                           maxlength="200" rows="4"
                           placeholder="Remark for require-machine">
-            </textarea>
+                </textarea>
                 <mat-hint [align]="end">{{InfoValueForm.controls.Remark.value?.length || 0}}/200</mat-hint>
               </mat-form-field>
-              <!--ProjectDetailString-->
+
+              <!-- ProjectDetailString -->
               <mat-form-field hintLabel="Specify the project number">
                 <input matInput formControlName="ProjectDetailString"
-                       (click)="openDialog('Project')" readonly
+                       (click)="openDialog('Project')" readonly required
                        class="click-input" placeholder="Project number for require machine">
                 <mat-error *ngIf="InfoValueForm.controls.ProjectDetailString.hasError('required')">
                   Project number is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
 
+              <!-- MailReply -->
               <mat-form-field hintLabel="Mail for communicate.">
                 <input matInput formControlName="MailReply"
                        maxlength="200"
                        placeholder="Mail reply">
                 <mat-hint [align]="end">{{InfoValueForm.controls.MailReply.value?.length || 0}}/200</mat-hint>
+              </mat-form-field>
+
+              <!--EmployeeRequireString-->
+              <mat-form-field hintLabel="Specify the employee require machine">
+                <input matInput type="text" formControlName="EmployeeRequireString"
+                       (click)="openDialog('Employee2')" readonly
+                       class="click-input" placeholder="Employee receive mat'l">
+              </mat-form-field>
+
+              <!-- Weight -->
+              <mat-form-field hintLabel="Specify the weight">
+                <input matInput type="number" formControlName="Weight"
+                       min="0"
+                       placeholder="Weight quality(Kg.)">
+                <mat-error *ngIf="InfoValueForm.controls.Weight.hasError('min')">
+                  Weight min is 0
+                </mat-error>
               </mat-form-field>
 
               <mat-action-row>
@@ -182,8 +209,6 @@
     </mat-step>
   </mat-horizontal-stepper>
 </div>
-
-
 
 <ng-template #elseBlock>
   <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>

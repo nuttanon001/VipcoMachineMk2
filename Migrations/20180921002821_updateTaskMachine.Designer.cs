@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VipcoMachine.Models;
 
 namespace VipcoMachine.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20180921002821_updateTaskMachine")]
+    partial class updateTaskMachine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,8 +316,6 @@ namespace VipcoMachine.Migrations
                         .HasMaxLength(200);
 
                     b.Property<int?>("TypeMachineId");
-
-                    b.Property<double?>("Weight");
 
                     b.HasKey("JobCardMasterId");
 

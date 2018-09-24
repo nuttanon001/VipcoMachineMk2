@@ -98,6 +98,14 @@ export class NoTaskInfoComponent extends
       GroupMisString: new FormControl({ value: this.InfoValue.GroupMisString, disabled: this.denySave }, Validators.required),
     });
     this.InfoValueForm.valueChanges.pipe(debounceTime(250), distinctUntilChanged()).subscribe(data => this.onValueChanged(data));
+
+
+    if (this.InfoValueForm) {
+      Object.keys(this.InfoValueForm.controls).forEach(field => {
+        const control = this.InfoValueForm.get(field);
+        control.markAsTouched({ onlySelf: true });
+      });
+    }
   }
 
   // On Get jobcardDetail

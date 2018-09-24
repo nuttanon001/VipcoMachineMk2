@@ -288,11 +288,11 @@ export class JobcardMasterWaitingComponent implements OnInit, OnDestroy {
               });
             // console.log(JSON.stringify(infoValue));
           } else if (condition === -1) {
-            if (this.serviceAuth.getAuth.LevelUser < 3) {
+            if (this.serviceAuth.getAuth.LevelUser < 2) {
               this.serviceDialogs.error("Access Deny", "Access is restricted. please contact administrator !!!", this.viewContainerRef)
                 .subscribe();
             } else {
-              this.serviceDialogs.confirmMessage("Question Message", "Do you want to cancel requrie quality control?", this.viewContainerRef)
+              this.serviceDialogs.confirmMessage("Question Message", "Do you want to cancel requrie machine job?", this.viewContainerRef)
                 .subscribe(result => {
                   if (result.result) {
                     infoValue.Remark = result.message;

@@ -8,6 +8,12 @@
   border-color:black !important;
 }
 
+:host /deep/ .ui-widget {
+  font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: 0.8em;
+}
+
+
 /* Structure */
 .master-container {
   height: $master-vh;

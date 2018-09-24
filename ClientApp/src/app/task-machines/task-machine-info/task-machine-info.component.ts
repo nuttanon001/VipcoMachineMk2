@@ -27,6 +27,7 @@ import { Machine } from '../../machines/shared/machine.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { StandardTimeService } from '../../standard-times/shared/standard-time.service';
 import { ScheduleMode } from '../shared/schedule-mode.model';
+import * as moment from "moment";
 
 @Component({
   selector: 'app-task-machine-info',
@@ -142,6 +143,7 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
         if (this.serviceAuth.getAuth) {
           this.InfoValue.AssignedBy = this.serviceAuth.getAuth.EmpCode;
           this.InfoValue.AssignedByString = this.serviceAuth.getAuth.NameThai;
+		      this.InfoValue.ReceiveBy = this.serviceAuth.getAuth.NameThai;
         }
         this.buildForm();
         this.OnGetJobCardDetail();
@@ -157,6 +159,7 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
       if (this.serviceAuth.getAuth) {
         this.InfoValue.AssignedBy = this.serviceAuth.getAuth.EmpCode;
         this.InfoValue.AssignedByString = this.serviceAuth.getAuth.NameThai;
+        this.InfoValue.ReceiveBy = this.serviceAuth.getAuth.NameThai;
       }
       this.buildForm();
     }
@@ -234,6 +237,9 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
       HasOverTime: new FormControl(
         { value: this.InfoValue.HasOverTime, disabled: this.denySave || this.onlyProgress },
       ),
+      ReceiveBy: new FormControl(
+        { value: this.InfoValue.ReceiveBy, disabled: this.denySave || this.onlyProgress },
+      ),
       ActualManHours: [this.InfoValue.ActualManHours],
       PlanManHours: [this.InfoValue.PlanManHours],
       MachineId: [this.InfoValue.MachineId],
@@ -256,6 +262,12 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
     });
     this.InfoValueForm.valueChanges.pipe(debounceTime(250), distinctUntilChanged()).subscribe(data => this.onValueChanged(data));
 
+    if (this.InfoValueForm) {
+      Object.keys(this.InfoValueForm.controls).forEach(field => {
+        const control = this.InfoValueForm.get(field);
+        control.markAsTouched({ onlySelf: true });
+      });
+    }
     //debug here
     // console.log(JSON.stringify(this.InfoValueForm.getRawValue() as TaskMachine));
 
@@ -270,7 +282,7 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
         });
 
       this.InfoValueForm.get("PlannedStartDate").valueChanges
-        .pipe(debounceTime(1000), distinctUntilChanged()).subscribe((data: string) => {
+        .pipe(debounceTime(150), distinctUntilChanged()).subscribe((data: string) => {
           if (this.standardTime) {
             const infoValue = this.InfoValueForm.getRawValue() as TaskMachine;
             // Schedule
@@ -282,7 +294,7 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
         });
 
       this.InfoValueForm.get("HasOverTime").valueChanges
-        .pipe(debounceTime(1000), distinctUntilChanged()).subscribe((data: number) => {
+        .pipe(debounceTime(150), distinctUntilChanged()).subscribe((data: number) => {
           if (this.standardTime) {
             const infoValue = this.InfoValueForm.getRawValue() as TaskMachine;
             this.setDate(infoValue, this.standardTime);
@@ -308,7 +320,10 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
         if (this.InfoValue.ProgressTaskMachines) {
           this.InfoValue.ProgressTaskMachines.forEach(item => TotalQty += item.Quantity);
           TotalQty = this.jobMaster.JobCardDetails[0].Quality - TotalQty;
-          if (TotalQty < 1) {
+
+          console.log(TotalQty);
+
+          if (TotalQty < 0) {
             this.serviceDialogs.error("Warning Message", "This quality is max.", this.viewContainerRef);
             return;
           }
@@ -385,12 +400,14 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
         this.scheduleMode.TypeMachineId = this.jobMaster.TypeMachineId;
         if (this.InfoValue.JobCardDetailId && this.jobMaster.JobCardDetails && this.jobMaster.JobCardDetails[0]) {
           this.InfoValueForm.patchValue({
-            TotalQuantity: this.jobMaster.JobCardDetails[0].Quality
+            TotalQuantity: this.jobMaster.JobCardDetails[0].Quality,
+            ReceiveBy: this.jobMaster.EmployeeRequireString,
           });
 
           if (!this.InfoValue.TaskMachineId) {
             this.InfoValueForm.patchValue({
-              TaskDueDate: this.jobMaster.DueDate
+              TaskDueDate: this.jobMaster.DueDate,
+              Weight: this.jobMaster.Weight || 0,
             });
           }
         }
@@ -460,16 +477,18 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
     this.InfoValueForm.patchValue({
       PlanManHours: this.standardDay.toFixed(2)
     });
-    let startDate = new Date(infoValue.PlannedStartDate);
+
+    moment.locale('th-TH');
+    let startDate = moment(infoValue.PlannedStartDate);
     let ManHrPerDay: number = 8 + (infoValue.HasOverTime || 0);
     this.totalDay = this.standardDay / ManHrPerDay;
+    //debug here
     // Set Date
-    let tempDate = new Date()
-    tempDate.setDate(startDate.getDate() + (this.standardDay /ManHrPerDay));
-    let totalSun = this.sunDDay(startDate, tempDate);
+    let tempDate = startDate.add((this.standardDay / ManHrPerDay), 'days');
+    let totalSun = this.sunDDay(startDate.toDate(), tempDate.toDate());
     // console.log(totalSun);
     if (totalSun > 0) {
-      tempDate.setDate(tempDate.getDate() + totalSun);
+      tempDate.add(totalSun,"day");
     }
     if (startDate) {
       this.InfoValueForm.patchValue({

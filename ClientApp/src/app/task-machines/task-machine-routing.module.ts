@@ -4,7 +4,6 @@ import { TaskMachineCenterComponent } from './task-machine-center.component';
 import { TaskMachineMasterComponent } from './task-machine-master/task-machine-master.component';
 import { TaskMachineScheduleComponent } from './task-machine-schedule/task-machine-schedule.component';
 import { AuthGuard } from '../core/auth/auth-guard.service';
-import { TaskMachineReportComponent } from './task-machine-report/task-machine-report.component';
 
 const routes: Routes = [{
   path: "",
@@ -27,10 +26,6 @@ const routes: Routes = [{
     {
       path: "link-mail/:taskid",
       component: TaskMachineScheduleComponent,
-    },
-    {
-      path: "taskmachine-summary",
-      component: TaskMachineReportComponent,
     },
     {
       path: "machine-schedule",

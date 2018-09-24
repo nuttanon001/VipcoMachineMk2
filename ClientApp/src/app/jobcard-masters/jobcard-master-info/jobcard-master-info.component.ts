@@ -78,6 +78,7 @@ export class JobcardMasterInfoComponent extends BaseInfoComponent<JobcardMaster,
       this.InfoValue = {
         JobCardMasterId: 0,
         JobCardMasterStatus: JobcardMasterStatus.Wait,
+        Weight: 0,
         JobCardDate: new Date,
         JobCardDetails: new Array
       };
@@ -118,6 +119,7 @@ export class JobcardMasterInfoComponent extends BaseInfoComponent<JobcardMaster,
       GroupCode: [this.InfoValue.GroupCode],
       ProjectCodeDetailId: [this.InfoValue.ProjectCodeDetailId],
       TypeMachineId: new FormControl({ value: this.InfoValue.TypeMachineId, disabled: this.denySave }, Validators.required),
+      Weight: new FormControl({ value: this.InfoValue.Weight, disabled:this.denySave },Validators.min(0)),
       JobCardDetails: [this.InfoValue.JobCardDetails],
       // BaseModel
       Creator: [this.InfoValue.Creator],
@@ -126,12 +128,20 @@ export class JobcardMasterInfoComponent extends BaseInfoComponent<JobcardMaster,
       ModifyDate: [this.InfoValue.ModifyDate],
       //FK
       ProjectDetailString: [this.InfoValue.ProjectDetailString,[Validators.required]],
-      EmployeeRequireString: [this.InfoValue.EmployeeRequireString, [Validators.required]],
+      EmployeeRequireString: [this.InfoValue.EmployeeRequireString],
       EmployeeWriteString: [this.InfoValue.EmployeeWriteString, [Validators.required]],
+      GroupMisString: [this.InfoValue.GroupMisString, [Validators.required]],
       AttachFile: [this.InfoValue.AttachFile],
       RemoveAttach: [this.InfoValue.RemoveAttach],
     });
     this.InfoValueForm.valueChanges.pipe(debounceTime(250), distinctUntilChanged()).subscribe(data => this.onValueChanged(data));
+
+    if (this.InfoValueForm) {
+      Object.keys(this.InfoValueForm.controls).forEach(field => {
+        const control = this.InfoValueForm.get(field);
+        control.markAsTouched({ onlySelf: true });
+      });
+    }
   }
   // On JobcardDetail
   OnDetailSelect(Item: { data?: JobcardDetail, option: number }) {
@@ -195,27 +205,35 @@ export class JobcardMasterInfoComponent extends BaseInfoComponent<JobcardMaster,
     }
 
     if (type) {
-      if (type === "Employee") {
+      if (type === "Employee" || type === "Employee2") {
         this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef)
           .subscribe(emp => {
             if (emp) {
-              this.InfoValueForm.patchValue({
-                EmpWrite: emp.EmpCode,
-                EmployeeWriteString: `คุณ${emp.NameThai}`,
-              });
-
-              this.serviceUser.getUserByEmpCode(emp.EmpCode)
-                .subscribe(user => {
-                  if (user) {
-                    if (user.MailAddress) {
-                      this.InfoValueForm.patchValue({
-                        MailReply: user.MailAddress
-                      });
-                    }
-                  }
+              if (type === "Employee") {
+                this.InfoValueForm.patchValue({
+                  EmpWrite: emp.EmpCode,
+                  EmployeeWriteString: `คุณ${emp.NameThai}`,
                 });
 
-              this.getEmployeeGroupMisByEmpCode(emp.EmpCode);
+                this.serviceUser.getUserByEmpCode(emp.EmpCode)
+                  .subscribe(user => {
+                    if (user) {
+                      if (user.MailAddress) {
+                        this.InfoValueForm.patchValue({
+                          MailReply: user.MailAddress
+                        });
+                      }
+                    }
+                  });
+
+                this.getEmployeeGroupMisByEmpCode(emp.EmpCode);
+              } else {
+                this.InfoValueForm.patchValue({
+                  EmpRequire: emp.EmpCode,
+                  EmployeeRequireString: `คุณ${emp.NameThai}`,
+                });
+              }
+           
             }
           });
       } else if (type === "Project") {
@@ -237,7 +255,7 @@ export class JobcardMasterInfoComponent extends BaseInfoComponent<JobcardMaster,
             // console.log(JSON.stringify(group));
             this.InfoValueForm.patchValue({
               GroupCode: group ? group.GroupMIS : undefined,
-              EmployeeRequireString: group ? `${group.GroupDesc}` : undefined,
+              GroupMisString: group ? `${group.GroupDesc}` : undefined,
             });
           });
       }
@@ -254,7 +272,7 @@ export class JobcardMasterInfoComponent extends BaseInfoComponent<JobcardMaster,
             // Patch data to form
             this.InfoValueForm.patchValue({
               GroupCode: this.InfoValue.GroupCode,
-              EmployeeRequireString: this.InfoValue.EmployeeRequireString,
+              GroupMisString: this.InfoValue.EmployeeRequireString,
             });
           }
         })

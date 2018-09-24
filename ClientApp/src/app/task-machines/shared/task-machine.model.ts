@@ -21,6 +21,7 @@ export interface TaskMachine extends BaseModel {
   ActualManHours?: number;
   TaskDueDate?: Date;
   HasOverTime?: number;
+  ReceiveBy?:string;
   // FK
   // Standard
   StandardTimeId?: number;

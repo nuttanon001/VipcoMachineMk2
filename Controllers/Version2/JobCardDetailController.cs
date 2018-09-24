@@ -138,7 +138,10 @@ namespace VipcoMachine.Controllers.Version2
                 var JobMaster = await this.repositoryJobMaster.GetFirstOrDefaultAsync(
                     x => x,
                     x => x.JobCardMasterId == MapData.JobCardMasterId, null,
-                    x => x.Include(z => z.ProjectCodeDetail.ProjectCodeMaster).Include(z => z.TypeMachine));
+                    x => x.Include(z => z.ProjectCodeDetail.ProjectCodeMaster)
+                          .Include(z => z.TypeMachine)
+                          .Include(z => z.EmployeeRequire)
+                          .Include(z => z.EmployeeWrite));
 
                 if (JobMaster != null)
                 {

@@ -18,40 +18,41 @@
                   Information for require machine / click for detail.
                 </mat-panel-description>
               </mat-expansion-panel-header>
-
-              <!-- JobCardMasterNo -->
-              <mat-form-field>
-                <input matInput type="text" [value]="jobMaster.JobCardMasterNo"
-                       (click)="openDialog('JobCard')" readonly
-                       class="click-input" placeholder="Require-Machine No">
-              </mat-form-field>
-
-              <!-- TypeMachineString -->
-              <mat-form-field>
-                <input matInput type="text" [value]="jobMaster.TypeMachineString"
-                       (click)="openDialog('JobCard')" readonly
-                       class="click-input" placeholder="Type machine">
-              </mat-form-field>
-
-              <div *ngIf="jobMaster.JobCardDetails && jobMaster.JobCardDetails[0]">
+              <ng-template matExpansionPanelContent>
+                <!-- JobCardMasterNo -->
                 <mat-form-field>
-                  <input matInput type="text" [value]="jobMaster.JobCardDetails[0].CuttingPlanString"
+                  <input matInput type="text" [value]="jobMaster.JobCardMasterNo"
                          (click)="openDialog('JobCard')" readonly
-                         class="click-input" placeholder="Cuttingplan/ShopDrawing">
+                         class="click-input" placeholder="Require-Machine No">
                 </mat-form-field>
 
+                <!-- TypeMachineString -->
                 <mat-form-field>
-                  <input matInput type="text" [value]="jobMaster.JobCardDetails[0].Material"
+                  <input matInput type="text" [value]="jobMaster.TypeMachineString"
                          (click)="openDialog('JobCard')" readonly
-                         class="click-input" placeholder="Material">
+                         class="click-input" placeholder="Type machine">
                 </mat-form-field>
 
-                <mat-form-field>
-                  <input matInput type="text" [value]="jobMaster.JobCardDetails[0].Quality"
-                         (click)="openDialog('JobCard')" readonly
-                         class="click-input" placeholder="Quality">
-                </mat-form-field>
-              </div>
+                <div *ngIf="jobMaster.JobCardDetails && jobMaster.JobCardDetails[0]">
+                  <mat-form-field>
+                    <input matInput type="text" [value]="jobMaster.JobCardDetails[0].CuttingPlanString"
+                           (click)="openDialog('JobCard')" readonly
+                           class="click-input" placeholder="Cuttingplan/ShopDrawing">
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <input matInput type="text" [value]="jobMaster.JobCardDetails[0].Material"
+                           (click)="openDialog('JobCard')" readonly
+                           class="click-input" placeholder="Material">
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <input matInput type="text" [value]="jobMaster.JobCardDetails[0].Quality"
+                           (click)="openDialog('JobCard')" readonly
+                           class="click-input" placeholder="Quality">
+                  </mat-form-field>
+                </div>
+              </ng-template>
 
               <mat-action-row>
                 <button mat-button color="warn" (click)="prevStep()">
@@ -70,39 +71,40 @@
                   Specify the standard-time and weight for task machine
                 </mat-panel-description>
               </mat-expansion-panel-header>
-              <!-- Weight -->
-              <mat-form-field hintLabel="Specify the weight">
-                <input matInput type="number" formControlName="Weight"
-                       required min="0" autofocus
-                       placeholder="Weight quality(Kg.)">
-                <mat-error *ngIf="InfoValueForm.controls.Weight.hasError('required')">
-                  Weight is <strong>required</strong>
-                </mat-error>
-                <mat-error *ngIf="InfoValueForm.controls.Weight.hasError('min')">
-                  Weight min is 0
-                </mat-error>
-              </mat-form-field>
+              <ng-template matExpansionPanelContent>
+                <!-- Weight -->
+                <mat-form-field hintLabel="Specify the weight">
+                  <input matInput type="number" formControlName="Weight"
+                         required min="0" autofocus
+                         placeholder="Weight quality(Kg.)">
+                  <mat-error *ngIf="InfoValueForm.controls.Weight.hasError('required')">
+                    Weight is <strong>required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="InfoValueForm.controls.Weight.hasError('min')">
+                    Weight min is 0
+                  </mat-error>
+                </mat-form-field>
 
-              <!-- StandardTimeString -->
-              <mat-form-field hintLabel="Specify the standard time">
-                <input matInput type="text" formControlName="StandardTimeString"
-                       (click)="openDialog('StandardTime')" readonly required
-                       class="click-input" placeholder="Standard time">
-                <mat-error *ngIf="InfoValueForm.controls.StandardTimeString.hasError('required')">
-                  Standard time is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
+                <!-- StandardTimeString -->
+                <mat-form-field hintLabel="Specify the standard time">
+                  <input matInput type="text" formControlName="StandardTimeString"
+                         (click)="openDialog('StandardTime')" readonly required
+                         class="click-input" placeholder="Standard time">
+                  <mat-error *ngIf="InfoValueForm.controls.StandardTimeString.hasError('required')">
+                    Standard time is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
 
-              <mat-form-field>
-                <input matInput [matDatepicker]="TaskDueDate" formControlName="TaskDueDate"
-                       placeholder="Due date" readonly>
-                <mat-datepicker-toggle matSuffix [for]="TaskDueDate"></mat-datepicker-toggle>
-                <mat-datepicker #TaskDueDate></mat-datepicker>
-                <mat-error *ngIf="InfoValueForm.controls.TaskDueDate.hasError('required')">
-                  Due date is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-
+                <mat-form-field>
+                  <input matInput [matDatepicker]="TaskDueDate" formControlName="TaskDueDate"
+                         placeholder="Due date" readonly>
+                  <mat-datepicker-toggle matSuffix [for]="TaskDueDate"></mat-datepicker-toggle>
+                  <mat-datepicker #TaskDueDate></mat-datepicker>
+                  <mat-error *ngIf="InfoValueForm.controls.TaskDueDate.hasError('required')">
+                    Due date is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </ng-template>
               <mat-action-row>
                 <button mat-button color="primary" (click)="nextStep()">
                   <strong>Next</strong>
@@ -120,115 +122,122 @@
                   Specify the machine and plan-date for task machine
                 </mat-panel-description>
               </mat-expansion-panel-header>
-
-              <!-- TaskMachineName -->
-              <mat-form-field hintLabel="Code will automatically generated.">
-                <input matInput formControlName="TaskMachineName"
-                       readonly
-                       placeholder="Code for task machine">
-              </mat-form-field>
-
-              <!-- AssignedByString -->
-              <mat-form-field hintLabel="Specify the employee assigned require machine">
-                <input matInput type="text" formControlName="AssignedByString"
-                       (click)="openDialog('Employee')" readonly required
-                       class="click-input" placeholder="Assigned by">
-                <mat-error *ngIf="InfoValueForm.controls.AssignedByString.hasError('required')">
-                  Employee is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-
-              <!-- HasOvertime -->
-              <mat-form-field>
-                <mat-select formControlName="HasOverTime"
-                            placeholder="Overtime">
-                  <mat-option>-</mat-option>
-                  <mat-option [value]="4">4 Hr.</mat-option>
-                  <mat-option [value]="7">7 Hr.</mat-option>
-                  <mat-option [value]="14">14 Hr.</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <!-- CurrentQuantity -->
-              <!--
-              <mat-form-field>
-                <input matInput type="number" formControlName="CurrentQuantity"
-                       readonly
-                       placeholder="Current quality for task machine">
-              </mat-form-field>
-              -->
-              <!-- PlanManHours -->
-              <mat-form-field>
-                <input matInput type="number" formControlName="PlanManHours"
-                       readonly
-                       placeholder="Plan man-houre">
-              </mat-form-field>
-
-              <!-- TotalQuantity -->
-              <mat-form-field>
-                <input matInput type="number" formControlName="TotalQuantity"
-                       readonly min="0"
-                       placeholder="TotalQuality">
-              </mat-form-field>
-
-              <!-- MachineString -->
-              <mat-form-field hintLabel="Specify the machine name">
-                <input matInput type="text" formControlName="MachineString"
-                       (click)="openDialog('Machine')" readonly required
-                       class="click-input" placeholder="Select machine">
-                <mat-error *ngIf="InfoValueForm.controls.MachineString.hasError('required')">
-                  Machine name is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-
-              <!-- PlannedStartDate -->
-              <mat-form-field>
-                <input matInput [matDatepicker]="PlannedStartDate" formControlName="PlannedStartDate"
-                       placeholder="Plan start" readonly>
-                <mat-datepicker-toggle matSuffix [for]="PlannedStartDate"></mat-datepicker-toggle>
-                <mat-datepicker #PlannedStartDate></mat-datepicker>
-                <mat-error *ngIf="InfoValueForm.controls.PlannedStartDate.hasError('required')">
-                  Plan start date is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-
-              <!-- PlannedStartDate -->
-              <mat-form-field>
-                <input matInput [matDatepicker]="PlannedEndDate" formControlName="PlannedEndDate"
-                       placeholder="Plan end">
-                <mat-datepicker-toggle matSuffix [for]="PlannedEndDate"></mat-datepicker-toggle>
-                <mat-datepicker #PlannedEndDate></mat-datepicker>
-                <mat-error *ngIf="InfoValueForm.controls.PlannedEndDate.hasError('required')">
-                  Plan end date is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-
-              <div *ngIf="InfoValue.TaskMachineId">
-                <!-- ActualStartDate -->
-                <mat-form-field>
-                  <input matInput [matDatepicker]="ActualStartDate" formControlName="ActualStartDate"
-                         placeholder="Actual start">
-                  <mat-datepicker-toggle matSuffix [for]="ActualStartDate"></mat-datepicker-toggle>
-                  <mat-datepicker #ActualStartDate></mat-datepicker>
+              <ng-template matExpansionPanelContent>
+                <!-- TaskMachineName -->
+                <mat-form-field hintLabel="Code will automatically generated.">
+                  <input matInput formControlName="TaskMachineName"
+                         readonly
+                         placeholder="Code for task machine">
                 </mat-form-field>
 
-                <!-- ActualEndDate -->
-                <mat-form-field>
-                  <input matInput [matDatepicker]="ActualEndDate" formControlName="ActualEndDate"
-                         placeholder="Actual end">
-                  <mat-datepicker-toggle matSuffix [for]="ActualEndDate"></mat-datepicker-toggle>
-                  <mat-datepicker #ActualEndDate></mat-datepicker>
+                <!-- AssignedByString -->
+                <mat-form-field hintLabel="Specify the employee assigned require machine">
+                  <input matInput type="text" formControlName="AssignedByString"
+                         (click)="openDialog('Employee')" readonly required
+                         class="click-input" placeholder="Assigned by">
+                  <mat-error *ngIf="InfoValueForm.controls.AssignedByString.hasError('required')">
+                    Employee is <strong>required</strong>
+                  </mat-error>
                 </mat-form-field>
-              </div>
 
-              <!-- Description -->
-              <mat-form-field hintLabel="Specify the description">
-                <textarea matInput formControlName="Description"
-                          maxlength="200" rows="4"
-                          placeholder="Description">
+                <!-- HasOvertime -->
+                <mat-form-field>
+                  <mat-select formControlName="HasOverTime"
+                              placeholder="Overtime">
+                    <mat-option>-</mat-option>
+                    <mat-option [value]="4">4 Hr.</mat-option>
+                    <mat-option [value]="7">7 Hr.</mat-option>
+                    <mat-option [value]="14">14 Hr.</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- CurrentQuantity -->
+                <!--
+  <mat-form-field>
+    <input matInput type="number" formControlName="CurrentQuantity"
+           readonly
+           placeholder="Current quality for task machine">
+  </mat-form-field>
+  -->
+                <!-- PlanManHours -->
+                <mat-form-field>
+                  <input matInput type="number" formControlName="PlanManHours"
+                         readonly
+                         placeholder="Plan man-houre">
+                </mat-form-field>
+
+                <!-- TotalQuantity -->
+                <mat-form-field>
+                  <input matInput type="number" formControlName="TotalQuantity"
+                         readonly min="0"
+                         placeholder="TotalQuality">
+                </mat-form-field>
+
+                <!-- MachineString -->
+                <mat-form-field hintLabel="Specify the machine name">
+                  <input matInput type="text" formControlName="MachineString"
+                         (click)="openDialog('Machine')" readonly required
+                         class="click-input" placeholder="Select machine">
+                  <mat-error *ngIf="InfoValueForm.controls.MachineString.hasError('required')">
+                    Machine name is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- PlannedStartDate -->
+                <mat-form-field>
+                  <input matInput [matDatepicker]="PlannedStartDate" formControlName="PlannedStartDate"
+                         placeholder="Plan start" readonly>
+                  <mat-datepicker-toggle matSuffix [for]="PlannedStartDate"></mat-datepicker-toggle>
+                  <mat-datepicker #PlannedStartDate></mat-datepicker>
+                  <mat-error *ngIf="InfoValueForm.controls.PlannedStartDate.hasError('required')">
+                    Plan start date is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- PlannedStartDate -->
+                <mat-form-field>
+                  <input matInput [matDatepicker]="PlannedEndDate" formControlName="PlannedEndDate"
+                         placeholder="Plan end">
+                  <mat-datepicker-toggle matSuffix [for]="PlannedEndDate"></mat-datepicker-toggle>
+                  <mat-datepicker #PlannedEndDate></mat-datepicker>
+                  <mat-error *ngIf="InfoValueForm.controls.PlannedEndDate.hasError('required')">
+                    Plan end date is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <div *ngIf="InfoValue.TaskMachineId">
+                  <!-- ActualStartDate -->
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="ActualStartDate" formControlName="ActualStartDate"
+                           placeholder="Actual start">
+                    <mat-datepicker-toggle matSuffix [for]="ActualStartDate"></mat-datepicker-toggle>
+                    <mat-datepicker #ActualStartDate></mat-datepicker>
+                  </mat-form-field>
+
+                  <!-- ActualEndDate -->
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="ActualEndDate" formControlName="ActualEndDate"
+                           placeholder="Actual end">
+                    <mat-datepicker-toggle matSuffix [for]="ActualEndDate"></mat-datepicker-toggle>
+                    <mat-datepicker #ActualEndDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <!-- ReceiveBy -->
+                <mat-form-field hintLabel="Specify the employee receive">
+                  <input matInput type="text" formControlName="ReceiveBy"
+                         placeholder="ReceiveBy">
+                </mat-form-field>
+
+                <!-- Description -->
+                <mat-form-field hintLabel="Specify the description">
+                  <textarea matInput formControlName="Description"
+                            maxlength="200" rows="4"
+                            placeholder="Description">
                 </textarea>
-                <mat-hint [align]="end">{{InfoValueForm.controls.Description.value?.length || 0}}/200</mat-hint>
-              </mat-form-field>
+                  <mat-hint [align]="end">{{InfoValueForm.controls.Description.value?.length || 0}}/200</mat-hint>
+                </mat-form-field>
+              </ng-template>
 
               <mat-action-row>
                 <button mat-button color="primary" (click)="nextStep()">
@@ -250,11 +259,13 @@
                   Machine information
                 </mat-panel-description>
               </mat-expansion-panel-header>
-              <!--Schedule-->
-              <app-task-machine-schedule [showCommand]="false"
-                                         [scheduleMode]="scheduleMode"
-                                         [tableWidth]="'85vw'">
-              </app-task-machine-schedule>
+              <ng-template matExpansionPanelContent>
+                <!--Schedule-->
+                <app-task-machine-schedule [showCommand]="false"
+                                           [scheduleMode]="scheduleMode"
+                                           [tableWidth]="'85vw'">
+                </app-task-machine-schedule>
+              </ng-template>
 
               <mat-action-row>
                 <button mat-button color="primary" (click)="nextStep()">

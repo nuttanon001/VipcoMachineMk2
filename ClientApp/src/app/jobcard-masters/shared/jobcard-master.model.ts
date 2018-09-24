@@ -11,6 +11,7 @@ export interface JobcardMaster extends BaseModel {
   JobCardDate?: Date;
   DueDate?: Date;
   MailReply?: string;
+  Weight?: number;
   //Fk
   EmpWrite?: string;
   EmpRequire?: string;
@@ -22,6 +23,7 @@ export interface JobcardMaster extends BaseModel {
   ProjectDetailString?: string;
   TypeMachineString?: string;
   StatusString?: string;
+  GroupMisString?: string;
   EmployeeRequireString?: string;
   EmployeeWriteString?: string;
   //Attach

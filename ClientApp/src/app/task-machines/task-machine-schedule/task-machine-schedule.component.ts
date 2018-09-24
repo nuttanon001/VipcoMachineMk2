@@ -105,7 +105,7 @@ export class TaskMachineScheduleComponent extends BaseScheduleComponent<any,Task
       }
     }, error => console.error(error));
 
-    console.log("ngOnInit");
+    // console.log("ngOnInit");
   }
 
   // on change
@@ -121,7 +121,7 @@ export class TaskMachineScheduleComponent extends BaseScheduleComponent<any,Task
       // console.log(JSON.stringify(this.scroll));
       // this.onValueChanged();
 
-      console.log("ngOnChanges");
+      // console.log("ngOnChanges");
     }
   }
 
@@ -130,7 +130,6 @@ export class TaskMachineScheduleComponent extends BaseScheduleComponent<any,Task
     this.loading = true;
     this.service.postTaskMachineSchedule(schedule)
       .subscribe((dbData: any) => {
-
 
         if (!dbData) {
           // console.log("no data");
@@ -213,7 +212,7 @@ export class TaskMachineScheduleComponent extends BaseScheduleComponent<any,Task
 
         // this.reloadData();
 
-        console.log("end");
+        // console.log("end");
 
       }, error => {
         this.totalRecords = 0;
