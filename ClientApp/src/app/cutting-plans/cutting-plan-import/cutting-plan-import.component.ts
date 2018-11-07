@@ -34,6 +34,7 @@ export class CuttingPlanImportComponent implements OnInit {
   importDatas: Array<CuttingPlanImport>;
   checkCutting: any;
   isLoadingResults: boolean;
+  isImport: boolean = false;
   // on init
   ngOnInit() {
     this.textHeader = new Array;
@@ -149,7 +150,12 @@ export class CuttingPlanImportComponent implements OnInit {
       return;
     }
 
+    if (this.isImport) {
+      return;
+    }
+
     if (this.importDatas.length) {
+      this.isImport = true;
       this.service.postImportCsv(this.importDatas, this.serviceAuth.getAuth.UserName)
         .subscribe(result => {
           // check cutting plan
@@ -160,7 +166,8 @@ export class CuttingPlanImportComponent implements OnInit {
         }, error => {
           this.serviceDialogs
             .error("Error Message", "ตรวจพบข้อผิดพลาด ในการนำเข้าข้อมูล โปรดตรวจสอบข้อมูล.", this.viewContainerRef);
-        });
+          this.isImport = false;
+        }, () => this.isImport = false);
     }
   }
   // on Check CuttingPlan

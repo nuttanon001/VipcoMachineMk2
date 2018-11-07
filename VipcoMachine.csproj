@@ -61,4 +61,6 @@
     </ItemGroup>
   </Target>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1Development_1json__JSONSchema="http://json.schemastore.org/appveyor" /></VisualStudio></ProjectExtensions>
+
 </Project>

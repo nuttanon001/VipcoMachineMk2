@@ -39,11 +39,16 @@ export class JobcardMasterViewExtendComponent extends JobcardMasterInfoComponent
   }
   // Option Paramter
   @Input() jobCardDetailId: number;
+  @Input() setStepCus: number = 0;
   @Output() jobCardDetail: EventEmitter<JobcardDetail> = new EventEmitter<JobcardDetail>();
 
   optionEdit: boolean = false;
   // on get data from ley
   onGetDataByKey(InfoValue?: JobcardMaster): void {
+    if (this.setStepCus) {
+      this.setStep(this.setStepCus);
+    }
+
     if (InfoValue) {
       this.service.getOneKeyNumber(InfoValue)
         .subscribe(dbData => {

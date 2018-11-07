@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VipcoMachine.Models;
 
 namespace VipcoMachine.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20181106063612_AddEmpLocation")]
+    partial class AddEmpLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,6 +188,8 @@ namespace VipcoMachine.Migrations
                     b.Property<string>("LocationCode");
 
                     b.HasKey("RowId");
+
+                    b.HasIndex("EmpCode");
 
                     b.ToTable("EmployeeLocations");
                 });
@@ -1146,6 +1150,13 @@ namespace VipcoMachine.Migrations
                     b.HasOne("VipcoMachine.Models.EmployeeGroupMIS", "EmployeeGroupMIS")
                         .WithMany("Employees")
                         .HasForeignKey("GroupMIS");
+                });
+
+            modelBuilder.Entity("VipcoMachine.Models.EmployeeLocation", b =>
+                {
+                    b.HasOne("VipcoMachine.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmpCode");
                 });
 
             modelBuilder.Entity("VipcoMachine.Models.JobCardDetail", b =>

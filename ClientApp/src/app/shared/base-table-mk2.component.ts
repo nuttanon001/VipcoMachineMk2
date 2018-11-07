@@ -52,12 +52,14 @@ export class BaseTableMk2Component<Model, Service extends BaseRestService<Model>
   selection: SelectionModel<Model>;
   subscribe: Observable<any>;
   // Parameter Component
+  templateSelect: Array<Model>;
   resultsLength = 0;
   isLoadingResults = true;
   selectedRow: Model;
 
   // Angular NgOnInit
   ngOnInit() {
+    this.templateSelect = new Array;
     this.searchBox.onlyCreate2 = this.isOnlyCreate;
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -92,22 +94,64 @@ export class BaseTableMk2Component<Model, Service extends BaseRestService<Model>
           // Catch if the GitHub API has reached its rate limit. Return empty data.
           return observableOf([]);
         })
-      ).subscribe(data => this.dataSource.data = data);
+    ).subscribe(data => {
+      this.dataSource.data = data;
+
+      if (this.templateSelect && this.templateSelect.length > 0) {
+        this.dataSource.data.forEach(row => {
+          if (deepIndexOf(this.templateSelect, row) !== -1) {
+            this.selection.select(row)
+          }
+        });
+      }
+    });
 
     // Selection
     this.selection = new SelectionModel<Model>(this.isMultiple, [], true)
     this.selection.onChange.subscribe(selected => {
-      if (this.isMultiple) {
-        if (selected.source) {
-          // this.selectedRow = selected.source.selected[0];
-          this.returnSelectesd.emit(selected.source.selected);
-        }
-      } else {
-        if (selected.source.selected[0]) {
-          this.selectedRow = selected.source.selected[0];
-          this.returnSelected.emit(selected.source.selected[0]);
+      // Added
+      if (selected.added && selected.added.length > 0) {
+        if (this.isMultiple) {
+          selected.added.forEach(item => {
+            if (deepIndexOf(this.templateSelect, item) === -1) {
+              // console.log("Add");
+              this.templateSelect.push(Object.assign({}, item));
+            }
+            this.selectedRow = item;
+          });
+          this.returnSelectesd.emit(this.templateSelect);
+        } else {
+          if (selected.added[0]) {
+            this.selectedRow = selected.added[0];
+            this.returnSelected.emit(selected.added[0]);
+          }
         }
       }
+      // Remove
+      if (selected.removed && selected.removed.length > 0) {
+        selected.removed.forEach(item => {
+          if (this.templateSelect && this.templateSelect.length > 0) {
+            let index = deepIndexOf(this.templateSelect, item);
+            // console.log("Remove", index);
+            this.templateSelect.splice(index, 1);
+          }
+
+          if (item === this.selectedRow) {
+            this.selectedRow = undefined;
+          }
+        });
+      }
+      //if (this.isMultiple) {
+      //  if (selected.source) {
+      //    // this.selectedRow = selected.source.selected[0];
+      //    this.returnSelectesd.emit(selected.source.selected);
+      //  }
+      //} else {
+      //  if (selected.source.selected[0]) {
+      //    this.selectedRow = selected.source.selected[0];
+      //    this.returnSelected.emit(selected.source.selected[0]);
+      //  }
+      //}
     });
   }
 
@@ -120,4 +164,12 @@ export class BaseTableMk2Component<Model, Service extends BaseRestService<Model>
   onActionClick(data: Model, option: number = 0) {
     this.returnSelectedWith.emit({ data: data, option: option });
   }
+}
+
+function deepIndexOf(arr, obj) {
+  return arr.findIndex(function (cur) {
+    return Object.keys(obj).every(function (key) {
+      return obj[key] === cur[key];
+    });
+  });
 }

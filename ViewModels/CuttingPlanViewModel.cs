@@ -10,5 +10,6 @@ namespace VipcoMachine.ViewModels
     {
         public string ProjectCodeString { get; set; }
         public string TypeCuttingPlanString { get; set; }
+        public string CreateNameThai { get; set; }
     }
 }

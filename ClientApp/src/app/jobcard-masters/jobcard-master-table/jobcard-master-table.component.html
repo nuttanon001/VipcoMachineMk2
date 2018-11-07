@@ -25,11 +25,11 @@
     </ng-container>
 
     <!-- ProjectDetailString Column -->
-    <ng-container matColumnDef="EmployeeRequireString">
+    <ng-container matColumnDef="EmployeeWriteString">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
-        Group
+        By Employee
       </mat-header-cell>
-      <mat-cell *matCellDef="let row">{{row?.EmployeeRequireString || "-"}}</mat-cell>
+      <mat-cell *matCellDef="let row">{{row?.EmployeeWriteString || "-"}}</mat-cell>
     </ng-container>
     
     <ng-container matColumnDef="TypeMachineString">

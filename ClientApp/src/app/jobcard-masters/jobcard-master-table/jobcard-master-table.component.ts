@@ -13,7 +13,7 @@ export class JobcardMasterTableComponent extends BaseTableComponent<JobcardMaste
 
   constructor(service: JobcardMasterService,serviceAuth:AuthService) {
     super(service, serviceAuth);
-    this.displayedColumns = ["select", "JobCardMasterNo", "ProjectDetailString", "EmployeeRequireString", "TypeMachineString", "StatusString", "JobCardDate"];
+    this.displayedColumns = ["select", "JobCardMasterNo", "ProjectDetailString", "EmployeeWriteString", "TypeMachineString", "StatusString", "JobCardDate"];
     this.isDisabled = false;
   }
 }

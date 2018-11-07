@@ -24,7 +24,16 @@ namespace VipcoMachine.Models
         public DateTime? CreateDate { get; set; }
         public string Modifyer { get; set; }
         public DateTime? ModifyDate { get; set; }
-
+		/// <summary>
+        /// Update 26/10/18
+        /// </summary>
+        [StringLength(50)]
+        public string BomCode { get; set; }
+        /// <summary>
+        /// Update 26/10/18
+        /// </summary>
+        [StringLength(20)]
+        public string TypeCode { get; set; }
         // FK
         // Employee Approve
         public string EmpApprove { get; set; }

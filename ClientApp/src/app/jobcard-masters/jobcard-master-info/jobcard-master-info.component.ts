@@ -249,13 +249,13 @@ export class JobcardMasterInfoComponent extends BaseInfoComponent<JobcardMaster,
             }
           });
       } else if (type === "GroupMis") {
-        this.serviceDialogs.dialogSelectGroupMis(this.viewContainerRef)
-          .subscribe((group: EmployeeGroupMis) => {
+        this.serviceDialogs.dialogSelectGroup(this.viewContainerRef)
+          .subscribe((group: EmployeeGroup) => {
             //debug here
             // console.log(JSON.stringify(group));
             this.InfoValueForm.patchValue({
-              GroupCode: group ? group.GroupMIS : undefined,
-              GroupMisString: group ? `${group.GroupDesc}` : undefined,
+              GroupCode: group ? group.GroupCode : undefined,
+              GroupMisString: group ? `${group.Description}` : undefined,
             });
           });
       }

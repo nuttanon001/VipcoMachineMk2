@@ -88,7 +88,7 @@
       <hr />
       <button mat-mini-fab color="accent" (click)="onSubmit()" class="mt-1"
               matTooltipPosition="left" matTooltip="Import file"
-              [disabled]="!importDatas.length">
+              [disabled]="!importDatas.length || isImport">
         <mat-icon>save</mat-icon>
       </button>
     </div>

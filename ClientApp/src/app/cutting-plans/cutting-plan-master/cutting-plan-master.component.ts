@@ -24,6 +24,7 @@ export class CuttingPlanMasterComponent extends BaseMasterComponent<CuttingPlan,
 
   @ViewChild(CuttingPlanTableComponent)
   private tableComponent: CuttingPlanTableComponent;
+  noUse: boolean = false;
 
   onReloadData(): void {
     this.tableComponent.reloadData();

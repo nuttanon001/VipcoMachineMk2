@@ -55,6 +55,22 @@
             <mat-datepicker #InstalledDate></mat-datepicker>
           </mat-form-field>
 
+          {{this.InfoValue.MachineStatus}}
+          <!--MachineStatus-->
+          <mat-form-field hintLabel="Specify the machine status">
+            <mat-select formControlName="MachineStatus"
+                        required
+                        placeholder="Status">
+              <mat-option>-</mat-option>
+              <mat-option [value]="1">Ready</mat-option>
+              <mat-option [value]="2">Repair</mat-option>
+              <mat-option [value]="3">Failure</mat-option>
+            </mat-select>
+            <mat-error *ngIf="InfoValueForm.controls.MachineStatus.hasError('required')">
+              Machine status is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
           <mat-action-row>
             <button mat-button color="primary" (click)="nextStep()">
               <strong>Next</strong>

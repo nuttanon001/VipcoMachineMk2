@@ -31,7 +31,7 @@ export class JobcardMasterDialogComponent extends BaseDialogViewComponent<Jobcar
     super(serviceCommunicate, dialogRef);
   }
   jobCardDetailId: number;
-
+  isLmSm: boolean = false;
   onInit(): void {
     if (this.optionData) {
       this.optionData.infoValue.ReadOnly = true;

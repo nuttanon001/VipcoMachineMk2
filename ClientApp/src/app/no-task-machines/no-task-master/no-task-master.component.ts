@@ -67,16 +67,17 @@ export class NoTaskMasterComponent extends BaseMasterComponent<NoTaskMachine,NoT
   onCheckStatus(infoValue?: NoTaskMachine): boolean {
     if (this.authService.getAuth) {
       if (this.authService.getAuth.LevelUser < 3) {
-        if (this.authService.getAuth.UserName !== infoValue.Creator) {
-          this.dialogsService.error("Access Denied", "You don't have permission to access.", this.viewContainerRef);
-          return false;
-        }
+        //if (this.authService.getAuth.UserName !== infoValue.Creator) {
+        //  this.dialogsService.error("Access Denied", "You don't have permission to access.", this.viewContainerRef);
+        //  return false;
+        //}
 
         let toDay = new Date;
-
-        if (infoValue.CreateDate !== toDay ) {
-          this.dialogsService.error("Access Deny", "คำขอตรวจสอบคุณภาพ ได้รับการดำเนินการไม่สามารถแก้ไขได้ !!!", this.viewContainerRef);
-          return false;
+        if (infoValue.CreateDate) {
+          if (infoValue.CreateDate !== toDay) {
+            this.dialogsService.error("Access Deny", "You don't have permission to access. !!!", this.viewContainerRef);
+            return false;
+          }
         }
       }
     }

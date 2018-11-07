@@ -259,37 +259,37 @@ namespace VipcoMachine.Controllers.Version2
             switch (Scroll.SortField)
             {
                 case "JobCardMasterNo":
-                    if (Scroll.SortOrder == -1)
+                    if (Scroll.SortOrder == 1)
                         order = o => o.OrderByDescending(x => x.JobCardMasterNo);
                     else
                         order = o => o.OrderBy(x => x.JobCardMasterNo);
                     break;
                 case "ProjectDetailString":
-                    if (Scroll.SortOrder == -1)
+                    if (Scroll.SortOrder == 1)
                         order = o => o.OrderByDescending(x => x.ProjectCodeDetail.ProjectCodeDetailCode);
                     else
                         order = o => o.OrderBy(x => x.ProjectCodeDetail.ProjectCodeDetailCode);
                     break;
                 case "EmployeeRequireString":
-                    if (Scroll.SortOrder == -1)
+                    if (Scroll.SortOrder == 1)
                         order = o => o.OrderByDescending(x => x.EmployeeGroup.Description);
                     else
                         order = o => o.OrderBy(x => x.EmployeeGroup.Description);
                     break;
                 case "StatusString":
-                    if (Scroll.SortOrder == -1)
+                    if (Scroll.SortOrder == 1)
                         order = o => o.OrderByDescending(x => x.JobCardMasterStatus);
                     else
                         order = o => o.OrderBy(x => x.JobCardMasterStatus);
                     break;
                 case "JobCardDate":
-                    if (Scroll.SortOrder == -1)
+                    if (Scroll.SortOrder == 1)
                         order = o => o.OrderByDescending(x => x.JobCardDate);
                     else
                         order = o => o.OrderBy(x => x.JobCardDate);
                     break;
                 case "TypeMachineString":
-                    if (Scroll.SortOrder == -1)
+                    if (Scroll.SortOrder == 1)
                         order = o => o.OrderByDescending(x => x.TypeMachine.TypeMachineCode);
                     else
                         order = o => o.OrderBy(x => x.TypeMachine.TypeMachineCode);
@@ -366,46 +366,58 @@ namespace VipcoMachine.Controllers.Version2
         [HttpPost]
         public override async Task<IActionResult> Create([FromBody] JobCardMaster record)
         {
-            // Set date for CrateDate Entity
-            if (record == null)
-                return BadRequest();
+            var Message = "Data not been found.";
 
-            record.JobCardMasterNo = await this.GeneratedCode(record.ProjectCodeDetailId ?? 0,
-                                                              record.TypeMachineId ?? 0);
-            record.JobCardMasterStatus = record.JobCardMasterStatus ?? JobCardMasterStatus.Wait;
-            // +7 Hour
-            record = this.helper.AddHourMethod(record);
-
-            if (record.GetType().GetProperty("CreateDate") != null)
-                record.GetType().GetProperty("CreateDate").SetValue(record, DateTime.Now);
-
-            if (record.JobCardDetails != null)
+            try
             {
-                foreach (var recordDetail in record.JobCardDetails)
+                // Set date for CrateDate Entity
+                if (record == null)
+                    return BadRequest();
+
+                record.JobCardMasterNo = await this.GeneratedCode(record.ProjectCodeDetailId ?? 0,
+                                                                  record.TypeMachineId ?? 0);
+                record.JobCardMasterStatus = record.JobCardMasterStatus ?? JobCardMasterStatus.Wait;
+                // +7 Hour
+                record = this.helper.AddHourMethod(record);
+
+                if (record.GetType().GetProperty("CreateDate") != null)
+                    record.GetType().GetProperty("CreateDate").SetValue(record, DateTime.Now);
+
+                if (record.JobCardDetails != null)
                 {
-                    recordDetail.JobCardDetailStatus = recordDetail.JobCardDetailStatus ?? JobCardDetailStatus.Wait;
-                    recordDetail.CreateDate = record.CreateDate;
-                    recordDetail.Creator = record.Creator;
-                    // Insert UnitMeasure
-                    recordDetail.UnitsMeasure = null;
-                    // Insert CuttingPlan
-                    if (recordDetail.CuttingPlanId < 1 && recordDetail.CuttingPlan != null)
+                    foreach (var recordDetail in record.JobCardDetails)
                     {
-                        recordDetail.CuttingPlan.CreateDate = record.CreateDate;
-                        recordDetail.CuttingPlan.Creator = record.Creator;
-                        if (string.IsNullOrEmpty(recordDetail?.CuttingPlan.MaterialSize))
-                            recordDetail.CuttingPlan.MaterialSize = recordDetail.Material;
-                        if (recordDetail?.CuttingPlan?.Quantity == null || recordDetail?.CuttingPlan?.Quantity < 1)
-                            recordDetail.CuttingPlan.Quantity = recordDetail.Quality;
+                        recordDetail.JobCardDetailStatus = recordDetail.JobCardDetailStatus ?? JobCardDetailStatus.Wait;
+                        recordDetail.CreateDate = record.CreateDate;
+                        recordDetail.Creator = record.Creator;
+                        // Insert UnitMeasure
+                        recordDetail.UnitsMeasure = null;
+                        // Insert CuttingPlan
+                        if (recordDetail.CuttingPlanId < 1 && recordDetail.CuttingPlan != null)
+                        {
+                            recordDetail.CuttingPlan.CreateDate = record.CreateDate;
+                            recordDetail.CuttingPlan.Creator = record.Creator;
+                            if (string.IsNullOrEmpty(recordDetail?.CuttingPlan.MaterialSize))
+                                recordDetail.CuttingPlan.MaterialSize = recordDetail.Material;
+                            if (recordDetail?.CuttingPlan?.Quantity == null || recordDetail?.CuttingPlan?.Quantity < 1)
+                                recordDetail.CuttingPlan.Quantity = recordDetail.Quality;
+                        }
+                        else
+                            recordDetail.CuttingPlan = null;
                     }
-                    else
-                        recordDetail.CuttingPlan = null;
                 }
+
+                if (await this.repository.AddAsync(record) != null)
+                    return new JsonResult(record, this.DefaultJsonSettings);
+            }
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
             }
 
-            if (await this.repository.AddAsync(record) == null)
-                return BadRequest();
-            return new JsonResult(record, this.DefaultJsonSettings);
+            return BadRequest(new { Error = Message });
+
+            
         }
 
         [HttpPost("GetWaitJobCardScheduleOnlyLmSm")]
@@ -495,7 +507,7 @@ namespace VipcoMachine.Controllers.Version2
                             Columns.Add(day.Date.ToString("dd/MM/yy"));
                     }
 
-                    var DataTable = new List<IDictionary<String, Object>>();
+                    var DataTable = new List<IDictionary<string, object>>();
                     foreach(var machineGroup in HasData.GroupBy(z => z.TypeMachine))
                     {
                         foreach (var Data in machineGroup.OrderBy(x => x.CreateDate))
@@ -504,9 +516,11 @@ namespace VipcoMachine.Controllers.Version2
                                             $"/{(Data?.ProjectCodeDetail == null ? "No-Data" : Data?.ProjectCodeDetail?.ProjectCodeDetailCode)}";
 
                             var WorkGroup = Data?.TypeMachine?.TypeMachineCode ?? "";
-                            IDictionary<string, Object> rowData;
+                            IDictionary<string, object> rowData;
                             bool update = false;
-                            if (DataTable.Any(x => (string)x["JobNumber"] == JobNumber && (string)x["GroupMachine"] == WorkGroup))
+                            if (DataTable.Any(x => (string)x["JobNumber"] == JobNumber && 
+                                                   (string)x["GroupMachine"] == WorkGroup &&
+                                                   (string)x["Employee"] == Data?.EmployeeWrite?.NameThai))
                             {
                                 var FirstData = DataTable.FirstOrDefault(x => (string)x["JobNumber"] == JobNumber);
                                 if (FirstData != null)
@@ -575,91 +589,105 @@ namespace VipcoMachine.Controllers.Version2
         [HttpPut]
         public override async Task<IActionResult> Update(int key, [FromBody] JobCardMaster record)
         {
-            if (key < 1)
-                return BadRequest();
-            if (record == null)
-                return BadRequest();
+            var Message = "Data not been found.";
 
-            // +7 Hour
-            record = this.helper.AddHourMethod(record);
-
-            // Set date for CrateDate Entity
-            if (record.GetType().GetProperty("ModifyDate") != null)
-                record.GetType().GetProperty("ModifyDate").SetValue(record, DateTime.Now);
-
-            if (record.JobCardMasterStatus != JobCardMasterStatus.Complete)
+            try
             {
-                if (record.JobCardDetails.Any())
-                    record.JobCardMasterStatus = record.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait)
-                        ? JobCardMasterStatus.Wait : JobCardMasterStatus.InProcess;
-                else
-                    record.JobCardMasterStatus = JobCardMasterStatus.Wait;
-            }
+                if (key < 1)
+                    return BadRequest();
+                if (record == null)
+                    return BadRequest();
 
-            if (record.JobCardDetails != null)
-            {
-                foreach (var recordDetail in record.JobCardDetails)
+                // +7 Hour
+                record = this.helper.AddHourMethod(record);
+
+                // Set date for CrateDate Entity
+                if (record.GetType().GetProperty("ModifyDate") != null)
+                    record.GetType().GetProperty("ModifyDate").SetValue(record, DateTime.Now);
+
+                if (record.JobCardMasterStatus != JobCardMasterStatus.Complete)
                 {
-                    if (recordDetail.JobCardDetailId > 0)
-                    {
-                        recordDetail.ModifyDate = record.ModifyDate;
-                        recordDetail.Modifyer = record.Modifyer;
-                    }
+                    if (record.JobCardDetails.Any())
+                        record.JobCardMasterStatus = record.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait)
+                            ? JobCardMasterStatus.Wait : JobCardMasterStatus.InProcess;
                     else
-                    {
-                        recordDetail.CreateDate = record.ModifyDate;
-                        recordDetail.Creator = record.Modifyer;
-                        recordDetail.JobCardDetailStatus = recordDetail.JobCardDetailStatus ?? JobCardDetailStatus.Wait;
-                    }
+                        record.JobCardMasterStatus = JobCardMasterStatus.Wait;
+                }
 
-                    if (recordDetail.CuttingPlanId < 1 && recordDetail.CuttingPlan != null)
+                if (record.JobCardDetails != null)
+                {
+                    foreach (var recordDetail in record.JobCardDetails)
                     {
-                        if (recordDetail.CuttingPlan != null)
+                        if (recordDetail.JobCardDetailId > 0)
                         {
-                            recordDetail.CuttingPlan.CreateDate = record.ModifyDate;
-                            recordDetail.CuttingPlan.Creator = record.Modifyer;
+                            recordDetail.ModifyDate = record.ModifyDate;
+                            recordDetail.Modifyer = record.Modifyer;
+                        }
+                        else
+                        {
+                            recordDetail.CreateDate = record.ModifyDate;
+                            recordDetail.Creator = record.Modifyer;
+                            recordDetail.JobCardDetailStatus = recordDetail.JobCardDetailStatus ?? JobCardDetailStatus.Wait;
+                        }
 
-                            if (string.IsNullOrEmpty(recordDetail.CuttingPlan.MaterialSize))
-                                recordDetail.CuttingPlan.MaterialSize = recordDetail.Material;
+                        if (recordDetail.CuttingPlanId < 1 && recordDetail.CuttingPlan != null)
+                        {
+                            if (recordDetail.CuttingPlan != null)
+                            {
+                                recordDetail.CuttingPlan.CreateDate = record.ModifyDate;
+                                recordDetail.CuttingPlan.Creator = record.Modifyer;
 
-                            if (recordDetail.CuttingPlan?.Quantity == null || recordDetail.CuttingPlan?.Quantity < 1)
-                                recordDetail.CuttingPlan.Quantity = recordDetail.Quality;
+                                if (string.IsNullOrEmpty(recordDetail.CuttingPlan.MaterialSize))
+                                    recordDetail.CuttingPlan.MaterialSize = recordDetail.Material;
 
-                            recordDetail.CuttingPlan = await this.repositoryCuttingPlan.AddAsync(recordDetail.CuttingPlan);
-                            recordDetail.CuttingPlanId = recordDetail.CuttingPlan.CuttingPlanId;
+                                if (recordDetail.CuttingPlan?.Quantity == null || recordDetail.CuttingPlan?.Quantity < 1)
+                                    recordDetail.CuttingPlan.Quantity = recordDetail.Quality;
+
+                                recordDetail.CuttingPlan = await this.repositoryCuttingPlan.AddAsync(recordDetail.CuttingPlan);
+                                recordDetail.CuttingPlanId = recordDetail.CuttingPlan.CuttingPlanId;
+                            }
+                        }
+
+                        recordDetail.CuttingPlan = null;
+                        recordDetail.UnitsMeasure = null;
+                    }
+                }
+
+                if (await this.repository.UpdateAsync(record, key) != null)
+                {
+                    if (record != null)
+                    {
+                        // filter
+                        var dbDetails = await this.repositoryJobCardD.FindAllAsync(x => x.JobCardMasterId == key);
+                        //Remove Job if edit remove it
+                        foreach (var dbDetail in dbDetails)
+                        {
+                            if (!record.JobCardDetails.Any(x => x.JobCardDetailId == dbDetail.JobCardDetailId))
+                                await this.repositoryJobCardD.DeleteAsync(dbDetail.JobCardDetailId);
+                        }
+                        //Update JobCardDetail or New JobCardDetail
+                        foreach (var uDetail in record.JobCardDetails)
+                        {
+                            if (uDetail.JobCardDetailId > 0)
+                                await this.repositoryJobCardD.UpdateAsync(uDetail, uDetail.JobCardDetailId);
+                            else
+                            {
+                                if (uDetail.JobCardDetailId < 1)
+                                    uDetail.JobCardMasterId = record.JobCardMasterId;
+                                await this.repositoryJobCardD.AddAsync(uDetail);
+                            }
                         }
                     }
-
-                    recordDetail.CuttingPlan = null;
-                    recordDetail.UnitsMeasure = null;
+                    return new JsonResult(record, this.DefaultJsonSettings);
                 }
             }
-            if (await this.repository.UpdateAsync(record, key) == null)
-                return BadRequest();
-            if (record != null)
+            catch(Exception ex)
             {
-                // filter
-                var dbDetails = await this.repositoryJobCardD.FindAllAsync(x => x.JobCardMasterId == key);
-                //Remove Job if edit remove it
-                foreach (var dbDetail in dbDetails)
-                {
-                    if (!record.JobCardDetails.Any(x => x.JobCardDetailId == dbDetail.JobCardDetailId))
-                        await this.repositoryJobCardD.DeleteAsync(dbDetail.JobCardDetailId);
-                }
-                //Update JobCardDetail or New JobCardDetail
-                foreach (var uDetail in record.JobCardDetails)
-                {
-                    if (uDetail.JobCardDetailId > 0)
-                        await this.repositoryJobCardD.UpdateAsync(uDetail, uDetail.JobCardDetailId);
-                    else
-                    {
-                        if (uDetail.JobCardDetailId < 1)
-                            uDetail.JobCardMasterId = record.JobCardMasterId;
-                        await this.repositoryJobCardD.AddAsync(uDetail);
-                    }
-                }
+                Message = $"Has error {ex.ToString()}";
             }
-            return new JsonResult(record, this.DefaultJsonSettings);
+
+            return BadRequest(new { Error = Message });
+          
         }
 
         #region ATTACH

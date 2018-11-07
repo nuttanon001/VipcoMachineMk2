@@ -95,7 +95,11 @@ export class MachineInfoComponent extends BaseInfoComponent<Machine,MachineServi
       Brand: [this.InfoValue.Brand],
       MachineImageString: [this.InfoValue.MachineImageString],
       Remark: [this.InfoValue.Remark],
-      MachineStatus: [this.InfoValue.MachineStatus],
+      MachineStatus: [this.InfoValue.MachineStatus,
+        [
+          Validators.required,
+        ]
+      ],
       // BaseModel
       Creator: [this.InfoValue.Creator],
       CreateDate: [this.InfoValue.CreateDate],

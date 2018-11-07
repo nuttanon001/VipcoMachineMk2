@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VipcoMachine.Models;
 
 namespace VipcoMachine.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20181026081419_updateOvertime2")]
+    partial class updateOvertime2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,21 +175,6 @@ namespace VipcoMachine.Migrations
                     b.HasKey("GroupMIS");
 
                     b.ToTable("EmployeeGroupMIS");
-                });
-
-            modelBuilder.Entity("VipcoMachine.Models.EmployeeLocation", b =>
-                {
-                    b.Property<int>("RowId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("EmpCode");
-
-                    b.Property<string>("LocationCode");
-
-                    b.HasKey("RowId");
-
-                    b.ToTable("EmployeeLocations");
                 });
 
             modelBuilder.Entity("VipcoMachine.Models.GradeMaterial", b =>

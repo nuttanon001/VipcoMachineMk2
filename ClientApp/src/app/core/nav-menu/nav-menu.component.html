@@ -119,6 +119,10 @@
               <mat-icon>cloud_download</mat-icon>
               <span>&nbsp;Cutting Plan Import&nbsp;</span>
             </button>
+            <button mat-menu-item [routerLink]="['/cutting-plan/no-use']" routerLinkActive="active">
+              <mat-icon>compare_arrows</mat-icon>
+              <span>&nbsp;Cutting Plan Not Use&nbsp;</span>
+            </button>
             <button mat-menu-item [routerLink]="['/cutting-plan/not-finish']" routerLinkActive="active">
               <mat-icon>find_replace</mat-icon>
               <span>&nbsp;Cutting Plan Not Finish&nbsp;</span>
@@ -143,7 +147,7 @@
           <!-- (mouseleave)="menuOnCloseMenu(2)" -->
           <mat-menu class="mouseleave" #userMenu1="matMenu" [overlapTrigger]="true">
             <div style="padding-top:20px;" (mouseleave)="menuOnCloseMenu(4)">
-              <button mat-menu-item [routerLink]="['/register']" routerLinkActive="active">
+              <button mat-menu-item [routerLink]="['/register','1']" routerLinkActive="active">
                 <mat-icon>account_circle</mat-icon>
                 <span>&nbsp;Edit user info&nbsp;</span>
               </button>

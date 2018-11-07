@@ -14,6 +14,8 @@ import { CuttingPlanTableComponent } from './cutting-plan-table/cutting-plan-tab
 import { CuttingPlanMasterComponent } from './cutting-plan-master/cutting-plan-master.component';
 import { CuttingPlanImportComponent } from './cutting-plan-import/cutting-plan-import.component';
 import { CuttingPlanNotFinishComponent } from './cutting-plan-not-finish/cutting-plan-not-finish.component';
+import { CuttingPlanNoUseMasterComponent } from './cutting-plan-master/cutting-plan-nouse-master.component';
+import { CuttingPlanNouseTableComponent } from './cutting-plan-nouse-table/cutting-plan-nouse-table.component';
 
 @NgModule({
   imports: [
@@ -28,7 +30,9 @@ import { CuttingPlanNotFinishComponent } from './cutting-plan-not-finish/cutting
     CuttingPlanMasterComponent,
     CuttingPlanInfoComponent,
     CuttingPlanImportComponent,
-    CuttingPlanNotFinishComponent
+    CuttingPlanNotFinishComponent,
+    CuttingPlanNoUseMasterComponent,
+    CuttingPlanNouseTableComponent
   ],
   providers: [
     CuttingPlanService,

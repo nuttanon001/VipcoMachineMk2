@@ -362,7 +362,7 @@ namespace VipcoMachine.Controllers.Version2
 
             var helperPro = new Helpers.HelpersClass<ProgressTaskMachine>();
             // Has ProgressTaskMachines
-            if (record.ProgressTaskMachines != null)
+            if (record.ProgressTaskMachines != null && record.ProgressTaskMachines.Any())
             {
                 foreach (var item in record.ProgressTaskMachines)
                 {
@@ -376,6 +376,7 @@ namespace VipcoMachine.Controllers.Version2
 
                 record.ActualStartDate = record.ProgressTaskMachines.Min(x => x.ProgressDate);
                 record.CurrentQuantity = record.ProgressTaskMachines.Sum(x => x.Quantity);
+
                 if (record.CurrentQuantity >= record.TotalQuantity)
                 {
                     record.TaskMachineStatus = TaskMachineStatus.Complate;
@@ -589,17 +590,18 @@ namespace VipcoMachine.Controllers.Version2
                         {
                             //START Date
                             //HasData.Min(x => x.CreateDate),
-                            HasData.Min(x => x.TaskDueDate),
-                            HasData.Min(x => x?.JobCardDetail?.JobCardMaster?.DueDate)  ?? null,
-                            HasData.Min(x => x?.PlannedStartDate) ?? null,
-                            HasData.Min(x => x?.PlannedEndDate) ?? null,
+                            HasData.Min(x => x?.TaskDueDate?.Date),
+                            HasData.Min(x => x?.JobCardDetail?.JobCardMaster?.DueDate?.Date)  ?? null,
+                            HasData.Min(x => x?.PlannedStartDate.Date) ?? null,
+                            HasData.Min(x => x?.PlannedEndDate.Date) ?? null,
                             //END Date
                             //HasData.Max(x => x.CreateDate),
-                            HasData.Max(x => x.TaskDueDate),
-                            HasData.Max(x => x?.JobCardDetail?.JobCardMaster?.DueDate) ?? null,
-                            HasData.Max(x => x?.PlannedStartDate) ?? null,
-                            HasData.Max(x => x?.PlannedEndDate) ?? null,
+                            HasData.Max(x => x.TaskDueDate?.Date),
+                            HasData.Max(x => x?.JobCardDetail?.JobCardMaster?.DueDate?.Date) ?? null,
+                            HasData.Max(x => x?.PlannedStartDate.Date) ?? null,
+                            HasData.Max(x => x?.PlannedEndDate.Date) ?? null,
                         };
+
 
                         DateTime? MinDate = ListDate.Min();
                         DateTime? MaxDate = ListDate.Max();
@@ -628,13 +630,13 @@ namespace VipcoMachine.Controllers.Version2
                             countCol++;
                         }
 
-                        var DataTable = new List<IDictionary<string, Object>>();
+                        var DataTable = new List<IDictionary<string, object>>();
                         foreach (var Machine in HasData.GroupBy(x => x.MachineId))
                         {
                             // OrderBy(x => x.Machine.TypeMachineId).ThenBy(x => x.Machine.MachineCode)
                             foreach (var Data in Machine.OrderByDescending(x => x.PlannedStartDate).ThenBy(x => x.PlannedEndDate))
                             {
-                                IDictionary<String, Object> rowData = new ExpandoObject();
+                                IDictionary<string, object> rowData = new ExpandoObject();
                                 double Production = Data.TotalQuantity ?? 0;
                                 double Quantity;
 
@@ -645,12 +647,12 @@ namespace VipcoMachine.Controllers.Version2
 
                                 // var JobNo = $"{Data?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail?.ProjectCodeMaster.ProjectCode ?? "-"}";
                                 var JobNo = $"{Data?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail?.ProjectCodeMaster.ProjectCode ?? "-"}/{Data?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail?.ProjectCodeDetailCode ?? "-"}";
-
+                                var TaskCode = Data?.JobCardDetail?.JobCardMaster?.JobCardMasterNo ?? "";
                                 // Set Operator
                                 var MachineOp = await this.repositoryOperator.GetToListAsync(x => x.Employee.NameThai, x => x.MachineId == Data.MachineId);
                                 var NameOp = MachineOp.Any() ? string.Join("<br/>", MachineOp) : "";
                                 // add column time
-                                rowData.Add("MachineNo", (Data.Machine.MachineCode ?? "-") + (string.IsNullOrEmpty(NameOp) ? "" : $"<br/> {NameOp}"));
+                                rowData.Add("MachineNo", (Data.Machine.MachineCode ?? "-") + (string.IsNullOrEmpty(TaskCode) ? "" : $"<br/> {TaskCode}") + (string.IsNullOrEmpty(NameOp) ? "" : $"<br/> {NameOp}"));
                                 rowData.Add("JobNo", JobNo);
                                 var Infor = Data?.JobCardDetail?.CuttingPlan?.CuttingPlanNo +
                                             (string.IsNullOrEmpty(Data?.JobCardDetail?.Material) || string.IsNullOrWhiteSpace(Data?.JobCardDetail?.Material) ? "" : $"<br/>{Data?.JobCardDetail?.Material.Trim()}") +
@@ -767,7 +769,9 @@ namespace VipcoMachine.Controllers.Version2
                 if (TaskMachineId > 0)
                 {
                     var paper = await this.repository.GetFirstOrDefaultAsync(x => x,x => x.TaskMachineId == TaskMachineId, null,
-                        x => x.Include(z => z.JobCardDetail.CuttingPlan).Include(z => z.Employee));
+                        x => x.Include(z => z.JobCardDetail.CuttingPlan)
+                              .Include(z => z.Employee)
+                              .Include(z => z.JobCardDetail.JobCardMaster.EmployeeGroup));
                     if (paper != null)
                     {
                         var jobMaster = await this.repositoryJobMaster.GetFirstOrDefaultAsync(x => x ,x => x.JobCardMasterId == paper.JobCardDetail.JobCardMasterId , null, 
@@ -807,7 +811,7 @@ namespace VipcoMachine.Controllers.Version2
                                 Remark2 = jobMaster?.Description ?? "",
                                 Mate1 = paper?.JobCardDetail?.Material ?? "-",
                                 Plan = paper.PlannedStartDate.ToString("dd/MM/yy") + "  ถึง  " + paper.PlannedEndDate.ToString("dd/MM/yy"),
-                                Recevied = paper.ReceiveBy ?? "-",
+                                Recevied = paper?.JobCardDetail?.JobCardMaster?.EmployeeGroup?.Description ?? "-",
                                 Remark = paper?.Description ?? "-",
                                 ShopDrawing = paper?.JobCardDetail?.CuttingPlan?.CuttingPlanNo ?? "-",
                                 TaskMachineNo = paper?.TaskMachineName ?? "",

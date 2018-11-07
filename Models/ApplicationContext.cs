@@ -62,6 +62,7 @@ namespace VipcoMachine.Models
         public DbSet<GradeMaterial> GradeMaterials { get; set; }
         public DbSet<EmployeeGroup> EmpoyeeGroups { get; set; }
         public DbSet<EmployeeGroupMIS> EmployeeGroupMISs { get; set; }
+        public DbSet<EmployeeLocation> EmployeeLocations { get; set; }
         public DbSet<JobCardDetail> JobCardDetails { get; set; }
         public DbSet<JobCardMaster> JobCardMasters { get; set; }
         public DbSet<JobCardMasterHasAttach> JobCardMasterHasAttachs { get; set; }

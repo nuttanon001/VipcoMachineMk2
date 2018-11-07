@@ -15,4 +15,5 @@ export interface CuttingPlan extends BaseModel {
   //ViewModel
   ProjectCodeString?: string;
   TypeCuttingPlanString?: string;
+  CreateNameThai?: string;
 }

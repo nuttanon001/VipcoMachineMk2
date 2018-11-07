@@ -61,7 +61,7 @@ export class JobcardMasterComponent extends BaseMasterComponent<JobcardMaster, J
           this.onAttactFileToDataBase(complete.JobCardMasterId, attachs, complete.Creator || "");
         }
         //Debug here
-        console.log(JSON.stringify(complete));
+        // console.log(JSON.stringify(complete));
 
         if (complete) {
           this.displayValue = complete;

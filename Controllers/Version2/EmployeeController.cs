@@ -41,6 +41,7 @@ namespace VipcoMachine.Controllers.Version2
         public async Task<IActionResult> GetScroll([FromBody] ScrollViewModel Scroll)
         {
             var QueryData = this.repository.GetAllAsQueryable()
+                                .Where(x => x.GroupCode != "999999")
                                 .Include(x => x.EmployeeGroupMIS)
                                 .AsQueryable();
 

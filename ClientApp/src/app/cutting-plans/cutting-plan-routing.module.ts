@@ -4,6 +4,7 @@ import { CuttingPlanCenterComponent } from './cutting-plan-center.component';
 import { CuttingPlanMasterComponent } from './cutting-plan-master/cutting-plan-master.component';
 import { CuttingPlanImportComponent } from './cutting-plan-import/cutting-plan-import.component';
 import { CuttingPlanNotFinishComponent } from './cutting-plan-not-finish/cutting-plan-not-finish.component';
+import { CuttingPlanNoUseMasterComponent } from './cutting-plan-master/cutting-plan-nouse-master.component';
 
 const routes: Routes = [{
   path: "",
@@ -16,6 +17,10 @@ const routes: Routes = [{
     {
       path: "not-finish",
       component: CuttingPlanNotFinishComponent,
+    }, 
+    {
+      path: "no-use",
+       component: CuttingPlanNoUseMasterComponent,
     },
     {
       path: ":key",

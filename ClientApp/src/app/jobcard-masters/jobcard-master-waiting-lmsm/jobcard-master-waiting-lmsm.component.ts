@@ -221,13 +221,42 @@ export class JobcardMasterWaitingLmsmComponent implements OnInit, OnDestroy {
       this.serviceDialogs.dialogSelectRequireMachineLmSm(infoValue, this.viewContainerRef, true)
         .subscribe(jobcardDetail => {
           if (jobcardDetail) {
-            if (jobcardDetail.JobCardDetailId > 0) {
-              this.router.navigate(["task-machine/", jobcardDetail.JobCardDetailId]);
-            } else if (jobcardDetail.JobCardDetailId === -1) {
-              if (this.serviceAuth.getAuth.LevelUser < 2) {
+            if (jobcardDetail.JobCardDetailId > 0)
+            {
+              if (jobcardDetail.StatusString.indexOf("Split") !== -1)
+              {
+                jobcardDetail.ReadOnly = true;
+                this.serviceDialogs.dialogInfoJobCardDetail(this.viewContainerRef, jobcardDetail, true)
+                  .subscribe(result => {
+                    if (result) {
+                      this.needReset = true;
+                      if (result.SplitQuality && result.SplitQuality > 0) {
+                        // console.log(JSON.stringify(result));
+
+                        result.Creator = this.serviceAuth.getAuth.UserName || "";
+                        this.serviceJobDetail.postSplitJobCardDetail(result)
+                          .subscribe(splitJobDetail => {
+                            this.needReset = false;
+                            this.router.navigate(["task-machine/", splitJobDetail.JobCardDetailId]);
+                          });
+                      }
+                    }
+                  });
+              }
+              else
+              {
+                this.router.navigate(["task-machine/", jobcardDetail.JobCardDetailId]);
+              }
+            }
+            else if (jobcardDetail.JobCardDetailId === -1)
+            {
+              if (this.serviceAuth.getAuth.LevelUser < 2)
+              {
                 this.serviceDialogs.error("Access Deny", "Access is restricted. please contact administrator !!!", this.viewContainerRef)
                   .subscribe();
-              } else {
+              }
+              else
+              {
                 this.serviceDialogs.confirmMessage("Question Message", "Do you want to cancel requrie machine job ?", this.viewContainerRef)
                   .subscribe(result => {
                     if (result.result) {
@@ -240,11 +269,20 @@ export class JobcardMasterWaitingLmsmComponent implements OnInit, OnDestroy {
                     }
                   });
               }
-            } else {
+            }
+            else
+            {
               jobcardDetail.Creator = this.serviceAuth.getAuth.UserName || "";
               this.serviceJobDetail.addModel(jobcardDetail)
                 .subscribe(dbData => {
-                  this.router.navigate(["task-machine/", dbData.JobCardDetailId]);
+                  this.serviceDialogs.confirm("System Message", "ต้องการดำเนินการวางแผนทันทีหรือไม่ ?", this.viewContainerRef)
+                    .subscribe(result => {
+                      if (result) {
+                        this.router.navigate(["task-machine/", dbData.JobCardDetailId]);
+                      } else {
+                        this.onSelectRow(infoValue);
+                      }
+                    });
                 });
             }
             // this.serviceDialogs.context("", JSON.stringify(jobcardDetail), this.viewContainerRef).subscribe();

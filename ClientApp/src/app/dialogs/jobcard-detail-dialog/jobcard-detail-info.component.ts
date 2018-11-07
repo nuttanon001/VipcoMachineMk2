@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewContainerRef, Input } from '@angular/core';
 import { BaseInfoDialogComponent } from '../../shared/base-info-dialog-component';
 import { JobcardDetail } from '../../jobcard-masters/shared/jobcard-detail.model';
-import { FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { debounceTime,distinctUntilChanged } from 'rxjs/operators';
 import { DialogsService } from '../shared/dialogs.service';
 import { CuttingPlan } from '../../cutting-plans/shared/cutting-plan.model';
@@ -91,6 +91,21 @@ export class JobcardDetailInfoComponent extends BaseInfoDialogComponent<JobcardD
         [Validators.max(this.qualityMax)]
       ),
     });
+
+    const ControlMoreActivities: AbstractControl | undefined = this.InfoValueForm.get("SplitQuality");
+    if (ControlMoreActivities) {
+      ControlMoreActivities.valueChanges.pipe(
+        debounceTime(150),
+        distinctUntilChanged()).subscribe((data: any) => {
+          if (data) {
+            if (data > this.qualityMax) {
+              this.InfoValueForm.patchValue({
+                SplitQuality: this.qualityMax
+              });
+            }
+          }
+        });
+    }
 
     // On Form Value
     this.InfoValueForm.valueChanges.pipe(debounceTime(250), distinctUntilChanged()).subscribe(data => {

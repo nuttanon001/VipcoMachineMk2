@@ -32,6 +32,7 @@ export class JobcardMasterDialogLmSmComponent extends BaseDialogViewComponent<Jo
   }
   jobCardDetailId: number;
   isLmSm: boolean = true;
+  jobCardDetail: JobcardDetail;
 
   onInit(): void {
     if (this.optionData) {
@@ -48,15 +49,23 @@ export class JobcardMasterDialogLmSmComponent extends BaseDialogViewComponent<Jo
   }
 
   onSelectedClick(option?: number): void {
-    let value: JobcardDetail = {
-      JobCardDetailId : -1
+    if (option) {
+      if (option === -1) {
+        this.jobCardDetail = { JobCardDetailId: -1 };
+      } else if (option === 2) {
+        this.jobCardDetail.StatusString = "Split";
+      }
+      this.dialogRef.close(this.jobCardDetail);
     }
-    this.dialogRef.close(value);
   }
 
   onSelected(value?: JobcardDetail): void {
     if (value) {
-      this.dialogRef.close(value);
+      if (value.JobCardDetailId > 0) {
+        this.jobCardDetail = value;
+      } else {
+        this.dialogRef.close(value);
+      }
     }
   }
 }

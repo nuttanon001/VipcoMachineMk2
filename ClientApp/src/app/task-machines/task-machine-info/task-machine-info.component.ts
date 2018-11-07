@@ -121,7 +121,6 @@ export class TaskMachineInfoComponent extends BaseInfoComponent<TaskMachine, Tas
 
               //Get job card detail
               this.OnGetJobCardDetail();
-
               if (this.InfoValue.StandardTimeId) {
                 this.serviceStandard.getOneKeyNumber({ StandardTimeId: this.InfoValue.StandardTimeId })
                   .subscribe(dbStandard => {

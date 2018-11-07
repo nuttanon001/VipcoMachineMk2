@@ -27,12 +27,14 @@ namespace VipcoMachine.Controllers.Version2
         private readonly IRepositoryMachine<ProjectCodeMaster> repositoryProjectM;
         private readonly IRepositoryMachine<ProjectCodeDetail> repositoryProjectD;
         private readonly IRepositoryMachine<TaskMachine> repositoryTask;
+        private readonly IRepositoryMachine<User> repositoryUser;
         public CuttingPlanController(IRepositoryMachine<CuttingPlan> repo,
             IRepositoryMachine<JobCardMaster> repoJobCardM,
             IRepositoryMachine<JobCardDetail> repoJobCardD,
             IRepositoryMachine<ProjectCodeMaster> repoProjectM,
             IRepositoryMachine<ProjectCodeDetail> repoProjectD,
             IRepositoryMachine<TaskMachine> repoTask,
+            IRepositoryMachine<User> repoUser,
             IMapper mapper)
             : base(repo,mapper)
         {
@@ -42,6 +44,7 @@ namespace VipcoMachine.Controllers.Version2
             this.repositoryProjectM = repoProjectM;
             this.repositoryProjectD = repoProjectD;
             this.repositoryTask = repoTask;
+            this.repositoryUser = repoUser;
         }
 
         // GET: api/controller/5
@@ -376,6 +379,87 @@ namespace VipcoMachine.Controllers.Version2
             // Foreach
             foreach (var item in await QueryData.ToListAsync())
                 MapDatas.Add(this.mapper.Map<CuttingPlan, CuttingPlanViewModel>(item));
+
+            return new JsonResult(new ScrollDataViewModel<CuttingPlanViewModel>
+                (Scroll, MapDatas), this.DefaultJsonSettings);
+        }
+
+        // POST: api/version2/CuttingPlan/GetScroll
+        [HttpPost("GetScrollNotUser")]
+        public async Task<IActionResult> GetScrollNotUser([FromBody] ScrollViewModel Scroll)
+        {
+            var predicate = PredicateBuilder.False<CuttingPlan>();
+
+            // Filter
+            var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
+                                : Scroll.Filter.ToLower().Split(null);
+            foreach (var keyword in filters)
+            {
+                predicate = predicate.Or(x => x.CuttingPlanNo.ToLower().Contains(keyword) ||
+                                                x.Description.ToLower().Contains(keyword) ||
+                                                x.ProjectCodeDetail.ProjectCodeDetailCode.ToLower().Contains(keyword) ||
+                                                x.ProjectCodeDetail.Description.ToLower().Contains(keyword));
+            }
+            predicate = predicate.And(p => !p.JobCardDetails.Any() && p.TypeCuttingPlan == TypeCuttingPlan.CuttingPlan);
+            //Order by
+            Func<IQueryable<CuttingPlan>, IOrderedQueryable<CuttingPlan>> order;
+            // Order
+            switch (Scroll.SortField)
+            {
+                case "CuttingPlanNo":
+                    if (Scroll.SortOrder == -1)
+                        order = o => o.OrderByDescending(x => x.CuttingPlanNo);
+                    else
+                        order = o => o.OrderBy(x => x.CuttingPlanNo);
+                    break;
+                case "Description":
+                    if (Scroll.SortOrder == -1)
+                        order = o => o.OrderByDescending(x => x.Description);
+                    else
+                        order = o => o.OrderBy(x => x.Description);
+                    break;
+                case "ProjectCodeString":
+                    if (Scroll.SortOrder == -1)
+                        order = o => o.OrderByDescending(x => x.ProjectCodeDetail.ProjectCodeDetailCode);
+                    else
+                        order = o => o.OrderBy(x => x.ProjectCodeDetail.ProjectCodeDetailCode);
+                    break;
+                case "MaterialSize":
+                    if (Scroll.SortOrder == -1)
+                        order = o => o.OrderByDescending(x => x.MaterialSize);
+                    else
+                        order = o => o.OrderBy(x => x.MaterialSize);
+                    break;
+                default:
+                    order = o => o.OrderByDescending(x => x.CuttingPlanNo);
+                    break;
+            }
+
+            var QueryData = await this.repository.GetToListAsync(
+                                   selector: selected => selected,  // Selected
+                                   predicate: predicate, // Where
+                                   orderBy: order, // Order
+                                   include: x => x.Include(z => z.ProjectCodeDetail.ProjectCodeMaster)
+                                   .Include(z => z.JobCardDetails), // Include
+                                   skip: Scroll.Skip ?? 0, // Skip
+                                   take: Scroll.Take ?? 10); // Take
+
+            // Get TotalRow
+            Scroll.TotalRow = await this.repository.GetLengthWithAsync(predicate: predicate);
+            var MapDatas = new List<CuttingPlanViewModel>();
+            // Get employee user
+            var userList = QueryData.Select(z => z.Creator).Distinct().ToList();
+            var employee = await this.repositoryUser.GetToListAsync(
+                x => new { x.Employee.NameThai, x.UserName},
+                x => userList.Contains(x.UserName), null,
+                x => x.Include(z => z.Employee));
+            // Foreach
+            foreach (var item in QueryData.ToList())
+            {
+                var mapData = this.mapper.Map<CuttingPlan, CuttingPlanViewModel>(item);
+                mapData.CreateNameThai = employee.FirstOrDefault(z => z.UserName == mapData.Creator)?.NameThai;
+                MapDatas.Add(mapData);
+            }
 
             return new JsonResult(new ScrollDataViewModel<CuttingPlanViewModel>
                 (Scroll, MapDatas), this.DefaultJsonSettings);
